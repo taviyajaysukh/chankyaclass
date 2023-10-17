@@ -1,0 +1,85 @@
+.select2-container .select2-selection--single{
+	height:38px;
+	width:100%;
+}
+.select2-container{
+	width:100% !important;
+}
+
+ #subjectTable .chapter_wrap {
+    display: unset;
+    width: auto;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 10px;
+    margin: 0 2px 5px;
+    background: #00bcd4;
+    min-height: 30px;
+    float: left;
+    color: var(--Secondary-Color);
+    font-weight: 400;
+    border: none;
+    border-radius: 0;
+    cursor: default;
+}
+#subjectTable tbody td p {
+    padding: 3px 0;
+    text-transform: capitalize;
+    max-width: 400px;
+    white-space: normal;
+}
+#subjectTable tbody td .chapter_wrap>span {
+    float: left;
+}
+#subjectTable tbody td .chapter_wrap:hover .ChapterEditDltWrap {
+    opacity: 1;
+    visibility: visible;
+}
+#subjectTable tbody td .chapter_wrap .ChapterEditDltWrap {
+    opacity: 0;
+    visibility: hidden;
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -ms-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
+}
+.custom-table-dropdown{
+	overflow:scroll;
+	word-wrap:break-word;
+	width:160px;
+}
+.custom-statusbtn{
+	max-width:100%;
+	width:100%;
+}
+table.dataTable td, table.dataTable th{
+	text-align:center;
+}
+
+.subfeature i {
+    width:30px;
+    height:30px;
+    background-color: rgb(40, 239, 164);
+    text-align: center;
+    border-radius: 0px;
+    color: #fff;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+	cursor:pointer;
+}
+.subfeature .eb_rem_sheading {
+    background: rgb(255, 99, 91);
+    margin-left: 5px;
+	cursor:pointer;
+}
+
+.adddeletefeature{
+	position: relative;
+    display: inline-block;
+    float:right;
+	right:10px;
+    bottom: 34px;
+}

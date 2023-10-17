@@ -43,4 +43,7 @@ return [
 	'users'=>'Users',
 	'userslist'=>'Users List',
 	'adduser'=>'Add User',
+	'subjectmanager'=>'Subject manager',
+	'addstudent'=>'Add Student',
+	'studentmanage'=>'Student Manage',
 ];

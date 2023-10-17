@@ -10,12 +10,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Category</h1>
+            <h1 class="m-0">Batch manage</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Category</li>
+              <li class="breadcrumb-item active">Batch manage</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -27,41 +27,39 @@
     <section class="content">
       <div class="container-fluid">
         <!-- Small boxes (Stat box) -->
-		<button type="button" class="btn btn-default" data-toggle="modal" data-target="#addCategoryModal">
-		Add Category
-       </button>	
+		<a href="addbatch" class="btn btn-default">
+		Add batch
+       </a>	
 		<div class="card">
               <!-- /.card-header -->
               <div class="card-body">
-                <table id="categoryTable" class="table table-bordered table-striped">
+                <table id="batchTable" class="table table-bordered table-striped">
                   <thead>
                   <tr>
                     <th>Index</th>
-                    <th>Category Name</th>
-                    <th>Created By</th>
-                    <th>Status</th>
+					<th>Created By</th>
+					<th>Status</th>
                     <th>Action</th>
                   </tr>
                   </thead>
                   <tbody>
-					@if($categories)
-						@foreach($categories as $category)
+					@if($batches)
+						@foreach($batches as $batch)
 							<tr>
-								<td>{{$category->id}}</td>
-								<td>{{$category->categoryname}}</td>
-								<td>{{$category->createdby}}</td>
+								<td>{{$batch->id}}</td>
+								<td>{{$batch->createdby}}</td>
 								<td>
-								
-									@if($category->status == 'active')
-										<a href="javascript:void(0)" class="btn btn-success active changeStatus custom-statusbtn" data-id="{{ $category->id }}">Active</a>
+									@if($batch->status == 'active')
+										<a href="javascript:void(0)" class="btn btn-success active changeBatchStatus custom-statusbtn" data-id="{{ $batch->id }}">Active</a>
 									@else
-										<a href="javascript:void(0)" class="btn btn-danger active changeStatus custom-statusbtn" data-id="{{ $category->id }}">Deactive</a>
+										<a href="javascript:void(0)" class="btn btn-danger active changeBatchStatus custom-statusbtn" data-id="{{ $batch->id }}">Deactive</a>
 									@endif
 								</td>
 								<td class="text-right py-0 align-middle">
 								  <div class="btn-group btn-group-sm">
-									<a href="javascript:void(0)" class="btn btn-info editcategoryid" data-toggle="modal" data-target="#editCategoryModal" id="editcategoryid" data-id="{{ $category->id }}" data-categoryname="{{ $category->categoryname }}"><i class="fas fa-edit"></i></a>
-									<a href="javascript:void(0)" class="btn btn-danger delcateid" data-toggle="modal" data-target="#deleteCategoryModal" id="deletecateid" data-id="{{ $category->id }}"><i class="fas fa-trash"></i></a>
+									<a href="javascript:void(0)" class="btn btn-info"><i class="fas fa-edit"></i></a>
+									<a href="javascript:void(0)" class="btn btn-danger delbatchid" data-toggle="modal" data-target="#deleteBatchModal" id="deletebatchidid" data-id="{{ $batch->id }}"><i class="fas fa-trash"></i></a>
+								
 								  </div>
 								</td>
 							</tr>
@@ -71,9 +69,8 @@
                   <tfoot>
                   <tr>
                     <th>Index</th>
-                    <th>Category Name</th>
-                    <th>Created By</th>
-                    <th>Status</th>
+					<th>Created By</th>
+					<th>Status</th>
                     <th>Action</th>
                   </tr>
                   </tfoot>
