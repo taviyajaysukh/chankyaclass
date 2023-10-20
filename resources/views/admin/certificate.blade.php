@@ -61,12 +61,21 @@
 					</div>
 					<div class="col-md-6">
 						<div class="form-group">
+							@php
+								$templates = array(
+								'defaulttemplate'=>'Default Template',	
+								'templateone'=>'Template One',	
+								'templatetwo'=>'Template Two',	
+								);
+							@endphp
 							<label for="name">Certificate Template</label>
 							<select class="form-control" id="certificatetemplate" name="certificatetemplate">
 							  <option value="">Select template</option>
-							  <option value="defaulttemplate">Default Template</option>
-							  <option value="templateone">Template One</option>
-							  <option value="templatetwo">Template Two</option>
+							  @if($templates)
+								@foreach($templates as $key=>$val)
+							  <option value="{{@$key}}" {{$key == $certificates->certificatetemplate ? 'selected' : '' }}>{{@$val}}</option>
+							  @endforeach
+							@endif
 							</select>
 						  </div>
 					</div>

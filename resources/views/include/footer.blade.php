@@ -64,8 +64,88 @@
 <script src="{{asset('assets/')}}/plugins/select2/js/select2.full.min.js"></script>
 <script src="{{asset('assets/')}}/plugins/select2/js/select2.min.js"></script>
 <script src="{{asset('assets/')}}/clocktime/bootstrap-clockpicker.js"></script>
+<script src="{{asset('assets/')}}/plugins/ckeditor/ckeditor.js"></script>
+
+
 <!--<script src="{{asset('assets/')}}/script.js"></script>-->
 <script>
+
+//add question ckeditor
+let questionval = '';
+let questionvala = '';
+let questionvalb = '';
+let questionvalc = '';
+let questionvald = '';
+ClassicEditor.create( document.querySelector( '#question' )).then( editor => {
+	questionval = editor;
+} )
+.catch( err => {
+	console.error( err.stack );
+} );
+
+ClassicEditor.create( document.querySelector( '#optiona' ) ).then( editor => {
+	questionvala = editor;
+} )
+.catch( err => {
+	console.error( err.stack );
+} );
+ClassicEditor.create( document.querySelector( '#optionb' ) ).then( editor => {
+	questionvalb = editor;
+} )
+.catch( err => {
+	console.error( err.stack );
+} );
+ClassicEditor.create( document.querySelector( '#optionc' ) ).then( editor => {
+	questionvalc = editor;
+} )
+.catch( err => {
+	console.error( err.stack );
+} );
+ClassicEditor.create( document.querySelector( '#optiond' ) ).then( editor => {
+	questionvald = editor;
+} )
+.catch( err => {
+	console.error( err.stack );
+} );
+
+//edit question ckeditor
+let editquestionval = '';
+let editquestionvala = '';
+let editquestionvalb = '';
+let editquestionvalc = '';
+let editquestionvald = '';
+ClassicEditor.create( document.querySelector( '#editquestion' )).then( editor => {
+	editquestionval = editor;
+} )
+.catch( err => {
+	console.error( err.stack );
+} );
+
+ClassicEditor.create( document.querySelector( '#editoptiona' ) ).then( editor => {
+	editquestionvala = editor;
+} )
+.catch( err => {
+	console.error( err.stack );
+} );
+ClassicEditor.create( document.querySelector( '#editoptionb' ) ).then( editor => {
+	editquestionvalb = editor;
+} )
+.catch( err => {
+	console.error( err.stack );
+} );
+ClassicEditor.create( document.querySelector( '#editoptionc' ) ).then( editor => {
+	editquestionvalc = editor;
+} )
+.catch( err => {
+	console.error( err.stack );
+} );
+ClassicEditor.create( document.querySelector( '#editoptiond' ) ).then( editor => {
+	editquestionvald = editor;
+} )
+.catch( err => {
+	console.error( err.stack );
+} );
+      
 $(function () {
 	//datatable 
 	$("#getUserTable").DataTable({
@@ -135,6 +215,11 @@ $(function () {
       "responsive": true, "lengthChange": false, "autoWidth": false,
       "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
     }).buttons().container().appendTo('#batchTable_wrapper .col-md-6:eq(0)');
+	
+	$("#questionTable").DataTable({
+      "responsive": true, "lengthChange": false, "autoWidth": false,
+      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+    }).buttons().container().appendTo('#batchTable_wrapper .col-md-6:eq(0)');
 	//end datatable
 	//select 2
 	$('.js-example-basic-single').select2();
@@ -162,30 +247,7 @@ $(function () {
           cache: true
         }	
 	});
-	$("#batch_category").change(function(){
-		var val = $(this).val()
-		$.ajax({
-            url: '/admin/getsubcategoty',
-            type: 'POST',
-            data: {'cateid':val,"_token": "{{ csrf_token() }}"},
-            success: function(response) {
-				$('#batch_subcategory').empty()
-                if(response){
-					response.map((ite)=>{
-						$('#batch_subcategory').append('<option value="' + ite.id + '">' + ite.text + '</option>');
-					})
-				}else{
-					toastr.error(response?.message || 'Record not found!');
-				}
-            }            
-        });
-	})
-	$('#batch_subcategory').select2({
-		placeholder: "Select subcategory",
-	});
 	//add new inputbox
-
-	
   $.validator.setDefaults({
     submitHandler: function (form) {
 		const formData = new FormData(form);
@@ -1193,6 +1255,66 @@ $.validator.addMethod("greaterStart", function (value, element, params) {
       $(element).removeClass('is-invalid');
     }
   });
+  
+	//edit student
+	$('#editstudent').validate({
+    rules: {
+	  student_name: {
+        required: true,
+        minlength: 3
+      },
+	  gender: {
+        required: true,
+      },
+	  dateofbirth: {
+        required: true,
+      },
+	  email: {
+        required: true,
+		email:true,
+      },
+	  contactnumber: {
+        required: true,
+      },
+	  batch: {
+        required: true,
+      },
+    },
+    messages: {
+	  student_name: {
+        required: "Please provide a student name",
+        minlength: "Your student name must be at least 3 characters long"
+      },
+	  gender: {
+        required: "Please provide a gender",
+	  },
+	  dateofbirth: {
+        required: "Please provide a date of birth",
+	  },
+	  email: {
+        required: "Please provide a email",
+	  },
+	  contactnumber: {
+        required: "Please provide a contact number",
+	  },
+	  batch: {
+        required: "Please provide a batch",
+	  },
+      
+    },
+    errorElement: 'span',
+    errorPlacement: function (error, element) {
+      error.addClass('invalid-feedback');
+      element.closest('.form-group').append(error);
+    },
+    highlight: function (element, errorClass, validClass) {
+      $(element).addClass('is-invalid');
+    },
+    unhighlight: function (element, errorClass, validClass) {
+      $(element).removeClass('is-invalid');
+    }
+  });
+  
 	//delete upcomming exam record
 	$('.deletestudentrecord').click(function(){
 	  let studentid = $(this).data('id')
@@ -1801,7 +1923,42 @@ $.validator.addMethod("greaterStart", function (value, element, params) {
   });
   
    //edit note 
-   
+		$("#notesubject").change(function(){
+		var subjectid = $(this).val()
+		$.ajax({
+            url: '/admin/getchapter',
+            type: 'POST',
+            data: {'subjectid':subjectid,"_token": "{{ csrf_token() }}"},
+            success: function(response) {
+				$('#notechapter').empty()
+                if(response){
+					response.map((ite)=>{
+						$('#notechapter').append('<option value="' + ite.id + '">' + ite.text + '</option>');
+					})
+				}else{
+					toastr.error(response?.message || 'Record not found!');
+				}
+            }            
+        });
+	})
+	$("#editnotesubject").change(function(){
+		var subjectid = $(this).val()
+		$.ajax({
+            url: '/admin/getchapter',
+            type: 'POST',
+            data: {'subjectid':subjectid,"_token": "{{ csrf_token() }}"},
+            success: function(response) {
+				$('#editnotechapter').empty()
+                if(response){
+					response.map((ite)=>{
+						$('#editnotechapter').append('<option value="' + ite.id + '">' + ite.text + '</option>');
+					})
+				}else{
+					toastr.error(response?.message || 'Record not found!');
+				}
+            }            
+        });
+	})
    $(".editclicnote").click(function(){
 	   
 	   let noteid = $(this).data('id')
@@ -2871,6 +3028,7 @@ $.validator.addMethod("greaterStart", function (value, element, params) {
 	$('input[name=batch_image]').change(function (e) {
 		let imagename = e.target.files[0].name;
 		$("#batch_imagehidden").val(imagename)
+		$("#editbatch_imagehidden").val(imagename)
 	});
 	$("#submitbatchform").click(function(){
 		let batch_category = $("#batch_category").find(":selected").val() || '';
@@ -3006,6 +3164,517 @@ $.validator.addMethod("greaterStart", function (value, element, params) {
 		twelvehour: true,
 		'default': 'now'
 	});
+	
+	
+	//edit batch id clockpicker
+	
+	$('#editstart_time').clockpicker({
+		placement: 'bottom',
+		align: 'left',
+		autoclose: true,
+		twelvehour: true,
+		'default': 'now'
+	});
+	$('#editend_time').clockpicker({
+		placement: 'bottom',
+		align: 'left',
+		autoclose: true,
+		twelvehour: true,
+		'default': 'now'
+	});
+	$('#editsubject_start_time').clockpicker({
+		placement: 'bottom',
+		align: 'left',
+		autoclose: true,
+		twelvehour: true,
+		'default': 'now'
+	});
+	$('#editsubject_end_time').clockpicker({
+		placement: 'bottom',
+		align: 'left',
+		autoclose: true,
+		twelvehour: true,
+		'default': 'now'
+	});
+	//update batch 
+	
+	
+	$("#editsubmitbatchform").click(function(){
+		let batch_category = $("#editbatch_category").find(":selected").val() || '';
+		let batch_subcategory = $("#editbatch_subcategory").find(":selected").val() || '';
+		let batch_subject = $("#editbatch_subject").find(":selected").val() || '';
+		let batch_chapter = $("#editbatch_chapter").find(":selected").val() || '';
+		let batch_teacher = $("#editbatch_teacher").find(":selected").val() || '';
+		let batch_name = $("#editbatch_name").val() || '';
+		let start_date = $("#editstart_date").val() || '';
+		let startdatecom = new Date(start_date).getTime();
+		let end_date = $("#editend_date").val() || '';
+		let enddatecom = new Date(end_date).getTime();
+		let start_time = $("#editstart_time").val() || '';
+		let end_time = $("#editend_time").val() || '';
+		
+		let subject_start_date = $("#editsubject_start_date").val() || '';
+		let startsubdatecom = new Date(subject_start_date).getTime();
+		let subject_end_date = $("#editsubject_end_date").val() || '';
+		let endsubdatecom = new Date(subject_end_date).getTime();
+		let subject_start_time = $("#editsubject_start_time").val() || '';
+		let subject_end_time = $("#editsubject_end_time").val() || '';
+		
+		let batch_image = $("#editbatch_imagehidden").val() || '';
+		let editbatch_imageold = $("#editbatch_imageold").val() || '';
+		let issubmitBF = true
+		if(batch_category == ''){
+			issubmitBF = false;
+			toastr.error('Please select category')
+		}else if(batch_subcategory == ''){
+			issubmitBF = false;
+			toastr.error('Please select subcategory')
+		}else if(batch_name == ''){
+			issubmitBF = false;
+			toastr.error('Please enter batch name')
+		}else if(start_date == ''){
+			issubmitBF = false;
+			toastr.error('Please enter start date')
+		}else if(end_date == ''){
+			issubmitBF = false;
+			toastr.error('Please enter end date')
+		}else if(startdatecom >= enddatecom){
+			issubmitBF = false;
+			toastr.error('Start date not greeter than end date')
+		}else if(start_time == ''){
+			issubmitBF = false;
+			toastr.error('Please enter start time')
+		}else if(end_time == ''){
+			issubmitBF = false;
+			toastr.error('Please enter end time')
+		}else if(batch_subject == '' || batch_chapter == '' || batch_teacher == '' || subject_start_date == '' || subject_end_date == '' || subject_start_time=='' || subject_end_time == '' || startsubdatecom >= endsubdatecom){
+			issubmitBF = false;
+			toastr.error('Please fill related field in subject section')
+			$("#subject-validation").css({'border':'1px solid red'})
+		}
+		if(issubmitBF){
+			$("#subject-validation").css({'border':'0px'})
+			let batch_type = $('input[name=editbatch_type]:checked').val();
+			let batch_imagefile = $("#editbatch_image").prop("files")[0];
+			let description = $("#editdescription").val()
+			let featureheader = $("#editfeatureheader").val()
+			let feature = $("#editfeature").val()
+			let batchid = $("#batchid").val()
+			let batch_form_data = new FormData();
+			batch_form_data.append("batch_category",batch_category)
+			batch_form_data.append("batch_subcategory",batch_subcategory)
+			batch_form_data.append("batch_name",batch_name)
+			batch_form_data.append("start_date",start_date)
+			batch_form_data.append("start_time",start_time)
+			batch_form_data.append("end_date",end_date)
+			batch_form_data.append("end_time",end_time)
+			batch_form_data.append("batch_type",batch_type)
+			batch_form_data.append("batch_image",batch_imagefile)
+			batch_form_data.append("editbatch_imageold",editbatch_imageold)
+			batch_form_data.append("description",description)
+			batch_form_data.append("featureheader",featureheader)
+			batch_form_data.append("feature",feature)
+			batch_form_data.append("batch_subject",batch_subject)
+			batch_form_data.append("batch_chapter",batch_chapter)
+			batch_form_data.append("batch_teacher",batch_teacher)
+			batch_form_data.append("subject_start_date",subject_start_date)
+			batch_form_data.append("subject_end_date",subject_end_date)
+			batch_form_data.append("subject_start_time",subject_start_time)
+			batch_form_data.append("subject_end_time",subject_end_time)
+			batch_form_data.append("batchid",batchid)
+			batch_form_data.append("_token", "{{ csrf_token() }}")
+			$.ajax({
+            url: '/admin/updatebatch',
+            type: 'POST',
+			processData: false,
+            cache: false,
+            contentType: false,
+            data: batch_form_data,
+            success: function(response) {
+				console.log(response)
+                if(response?.status == "success"){
+					toastr.success(response?.message || 'save successfully...')
+					setTimeout(()=>{
+						window.location = window.location.href
+					},2000)
+				}else{
+					toastr.error(response?.message || 'Record not found!');
+				}
+            }            
+        });
+		}
+		
+	});
+	
+	//Batch delete
+	$(".delbatchid").click(function(){
+		let batchid = $(this).data('id')
+		$("#deletebatchid").val(batchid)
+	})
+	$('#deletebatchbtn').click(function(){
+		let batchid = $('#deletebatchid').val()
+		$.ajax({
+            url: '/admin/deletebatch',
+            type: 'POST',
+            data: {'batchid':batchid,"_token": "{{ csrf_token() }}"},
+            success: function(response) {
+                if(response?.status == "success"){
+					toastr.success(response?.message || 'delete batch successfully...')	
+					$('.modal').modal('hide')
+					setTimeout(()=>{
+						window.location = window.location.href
+					},2000)
+				}else{
+					toastr.error(response?.message || 'Record not found!');
+				}
+            }            
+        });
+	})
+	//change Batch status
+	$('.changeBatchStatus').click(function(){
+		let batchid = $(this).data('id')
+		$.ajax({
+            url: '/admin/changebatchstatus',
+            type: 'POST',
+            data: {'batchid':batchid,"_token": "{{ csrf_token() }}"},
+            success: function(response) {
+                if(response?.status == "success"){
+					toastr.success(response?.message || 'status change successfully...')	
+					setTimeout(()=>{
+						window.location = window.location.href
+					},2000)
+				}else{
+					toastr.error(response?.message || 'Record not found!');
+				}
+            }            
+        });
+	})
+	
+	//edit batch select box
+	$('#editbatch_category').select2();
+	$('#editbatch_subcategory').select2();
+		$("#editbatch_category").change(function(){
+		var val = $(this).val()
+		$.ajax({
+            url: '/admin/getsubcategoty',
+            type: 'POST',
+            data: {'cateid':val,"_token": "{{ csrf_token() }}"},
+            success: function(response) {
+				$('#editbatch_subcategory').empty()
+                if(response){
+					response.map((ite)=>{
+						$('#editbatch_subcategory').append('<option value="' + ite.id + '">' + ite.text + '</option>');
+					})
+				}else{
+					toastr.error(response?.message || 'Record not found!');
+				}
+            }            
+        });
+	})
+	
+	$("#batch_category").change(function(){
+		var val = $(this).val()
+		$.ajax({
+            url: '/admin/getsubcategoty',
+            type: 'POST',
+            data: {'cateid':val,"_token": "{{ csrf_token() }}"},
+            success: function(response) {
+				$('#batch_subcategory').empty()
+                if(response){
+					response.map((ite)=>{
+						$('#batch_subcategory').append('<option value="' + ite.id + '">' + ite.text + '</option>');
+					})
+				}else{
+					toastr.error(response?.message || 'Record not found!');
+				}
+            }            
+        });
+	})
+	$('#batch_subcategory').select2({
+		placeholder: "Select subcategory",
+	});
+	
+	$("#editbatch_subject").change(function(){
+		var val = $(this).val()
+		$.ajax({
+            url: '/admin/getchapter',
+            type: 'POST',
+            data: {'subjectid':val,"_token": "{{ csrf_token() }}"},
+            success: function(response) {
+				$('#editbatch_chapter').empty()
+                if(response){
+					response.map((ite)=>{
+						$('#editbatch_chapter').append('<option value="' + ite.id + '">' + ite.text + '</option>');
+					})
+				}else{
+					toastr.error(response?.message || 'Record not found!');
+				}
+            }            
+        });
+	})
+	
+	$("#videosubject").change(function(){
+		var val = $(this).val()
+		$.ajax({
+            url: '/admin/getchapter',
+            type: 'POST',
+            data: {'subjectid':val,"_token": "{{ csrf_token() }}"},
+            success: function(response) {
+				$('#videochapter').empty()
+                if(response){
+					response.map((ite)=>{
+						$('#videochapter').append('<option value="' + ite.id + '">' + ite.text + '</option>');
+					})
+				}else{
+					toastr.error(response?.message || 'Record not found!');
+				}
+            }            
+        });
+	})
+	$("#editvideosubject").change(function(){
+		var val = $(this).val()
+		$.ajax({
+            url: '/admin/getchapter',
+            type: 'POST',
+            data: {'subjectid':val,"_token": "{{ csrf_token() }}"},
+            success: function(response) {
+				$('#editvideochapter').empty()
+                if(response){
+					response.map((ite)=>{
+						$('#editvideochapter').append('<option value="' + ite.id + '">' + ite.text + '</option>');
+					})
+				}else{
+					toastr.error(response?.message || 'Record not found!');
+				}
+            }            
+        });
+	})	
+	//manage question
+	//subject question 
+		$("#questionsubject").change(function(){
+		var subjectid = $(this).val()
+		$.ajax({
+            url: '/admin/getchapter',
+            type: 'POST',
+            data: {'subjectid':subjectid,"_token": "{{ csrf_token() }}"},
+            success: function(response) {
+				$('#questionchapter').empty()
+                if(response){
+					response.map((ite)=>{
+						$('#questionchapter').append('<option value="' + ite.id + '">' + ite.text + '</option>');
+					})
+				}else{
+					toastr.error(response?.message || 'Record not found!');
+				}
+            }            
+        });
+	})
+	//edit subject question 
+		$("#editquestionsubject").change(function(){
+		var subjectid = $(this).val()
+		$.ajax({
+            url: '/admin/getchapter',
+            type: 'POST',
+            data: {'subjectid':subjectid,"_token": "{{ csrf_token() }}"},
+            success: function(response) {
+				$('#editquestionchapter').empty()
+                if(response){
+					response.map((ite)=>{
+						$('#editquestionchapter').append('<option value="' + ite.id + '">' + ite.text + '</option>');
+					})
+				}else{
+					toastr.error(response?.message || 'Record not found!');
+				}
+            }            
+        });
+	})
+	//add question
+	$("#submitquestion").click(function(){
+		let questionsubject = $("#questionsubject").find("option:selected").val()
+		let questionchapter = $("#questionchapter").find("option:selected").val()
+		let addmarks = $("#addmark").val();
+		let question = questionval.getData();
+		let questiona = questionvala.getData();
+		let questionb = questionvalb.getData();
+		let questionc = questionvalc.getData();
+		let questiond = questionvald.getData();
+		let isValid = true;
+		if(questionsubject == ''){
+			toastr.error('Please select subject')
+			isValid = false
+		}else if(questionchapter == ''){
+			toastr.error('Please select chapter')
+			isValid = false
+		}else if(question == ''){
+			toastr.error('Please enter your question')
+			isValid = false
+		}else if(questiona == ''){
+			toastr.error('Please enter question option A')
+			isValid = false
+		}else if(questionb == ''){
+			toastr.error('Please enter question option B')
+			isValid = false
+		}else if(questionc == ''){
+			toastr.error('Please enter question option C')
+			isValid = false
+		}else if(questiond == ''){
+			toastr.error('Please enter question option D')
+			isValid = false
+		}else if(addmarks == ''){
+			toastr.error('Please enter marks')
+			isValid = false
+		}
+		if(isValid){
+			let rightanswer = $("input[name='rightanswer']:checked").val();
+			var qform_data = new FormData();
+			qform_data.append("subject",questionsubject)
+			qform_data.append("chapter",questionchapter)
+			qform_data.append("question",question)
+			qform_data.append("optiona",questiona)
+			qform_data.append("optionb",questionb)
+			qform_data.append("optionc",questionc)
+			qform_data.append("optiond",questiond)
+			qform_data.append("rightanswer",rightanswer)
+			qform_data.append("addmarks",addmarks)
+			qform_data.append("_token", "{{ csrf_token() }}")
+			
+			$.ajax({
+            url: '/admin/addquestion',
+            type: 'POST',
+			processData: false,
+            cache: false,
+            contentType: false,
+            data: qform_data,
+            success: function(response) {
+                if(response?.status == "success"){
+					toastr.success(response?.message || 'save successfully...')
+					setTimeout(()=>{
+						window.location = window.location.href
+					},2000)
+				}else{
+					toastr.error(response?.message || 'Record not found!');
+				}
+            }            
+        });
+		}
+	});
+	
+	//edit question
+	$("#editsubmitquestion").click(function(){
+		let questionsubject = $("#editquestionsubject").find("option:selected").val()
+		let questionchapter = $("#editquestionchapter").find("option:selected").val()
+		let questionid = $("#questionid").val();
+		let addmarks = $("#editaddmark").val();
+		let question = editquestionval.getData();
+		let questiona = editquestionvala.getData();
+		let questionb = editquestionvalb.getData();
+		let questionc = editquestionvalc.getData();
+		let questiond = editquestionvald.getData();
+		let isValid = true;
+		if(questionsubject == ''){
+			toastr.error('Please select subject')
+			isValid = false
+		}else if(questionchapter == ''){
+			toastr.error('Please select chapter')
+			isValid = false
+		}else if(question == ''){
+			toastr.error('Please enter your question')
+			isValid = false
+		}else if(questiona == ''){
+			toastr.error('Please enter question option A')
+			isValid = false
+		}else if(questionb == ''){
+			toastr.error('Please enter question option B')
+			isValid = false
+		}else if(questionc == ''){
+			toastr.error('Please enter question option C')
+			isValid = false
+		}else if(questiond == ''){
+			toastr.error('Please enter question option D')
+			isValid = false
+		}else if(addmarks == ''){
+			toastr.error('Please enter marks')
+			isValid = false
+		}
+		if(isValid){
+			let rightanswer = $("input[name='rightanswer']:checked").val();
+			var qform_data = new FormData();
+			qform_data.append("questionid",questionid)
+			qform_data.append("subject",questionsubject)
+			qform_data.append("chapter",questionchapter)
+			qform_data.append("question",question)
+			qform_data.append("optiona",questiona)
+			qform_data.append("optionb",questionb)
+			qform_data.append("optionc",questionc)
+			qform_data.append("optiond",questiond)
+			qform_data.append("rightanswer",rightanswer)
+			qform_data.append("addmarks",addmarks)
+			qform_data.append("_token", "{{ csrf_token() }}")
+			
+			$.ajax({
+            url: '/admin/updatequestion',
+            type: 'POST',
+			processData: false,
+            cache: false,
+            contentType: false,
+            data: qform_data,
+            success: function(response) {
+                if(response?.status == "success"){
+					toastr.success(response?.message || 'save successfully...')
+					setTimeout(()=>{
+						window.location = window.location.href
+					},2000)
+				}else{
+					toastr.error(response?.message || 'Record not found!');
+				}
+            }            
+        });
+		}
+	});
+	
+	//question delete
+	$(".deletquestionclick").click(function(){
+		let questionid = $(this).data('id')
+		$("#deletequestionid").val(questionid)
+	})
+	$('#deletequestionbtn').click(function(){
+		let questionid = $('#deletequestionid').val()
+		$.ajax({
+            url: '/admin/deletequestion',
+            type: 'POST',
+            data: {'questionid':questionid,"_token": "{{ csrf_token() }}"},
+            success: function(response) {
+                if(response?.status == "success"){
+					toastr.success(response?.message || 'delete question successfully...')	
+					$('.modal').modal('hide')
+					setTimeout(()=>{
+						window.location = window.location.href
+					},2000)
+				}else{
+					toastr.error(response?.message || 'Record not found!');
+				}
+            }            
+        });
+	})
+	//change question status
+	$('.changeQuestionStatus').click(function(){
+		let questionid = $(this).data('id')
+		$.ajax({
+            url: '/admin/changequestionstatus',
+            type: 'POST',
+            data: {'questionid':questionid,"_token": "{{ csrf_token() }}"},
+            success: function(response) {
+                if(response?.status == "success"){
+					toastr.success(response?.message || 'status change successfully...')	
+					setTimeout(()=>{
+						window.location = window.location.href
+					},2000)
+				}else{
+					toastr.error(response?.message || 'Record not found!');
+				}
+            }            
+        });
+	})
 });
 function addfeature(){
 	var list_fieldHTML = '<div class="subfeature"><input type="text" name="feature[]" class="form-control feature" placeholder="feature"><div class="adddeletefeature"><i class="fa fa-plus add_new_feature eb_add_sheading assSubHeading" onclick="addfeature()"></i><i class="fa fa-trash eb_rem_sheading removeSubHeading" onclick="removefeature(this)"></i></div></div>'; 

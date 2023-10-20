@@ -21,6 +21,7 @@ Route::get('/login',function(){
     return redirect('/');
 });
 Route::get('/',[AuthController::class,'loadLogin']);
+Route::get('/getcurrency',[AdminController::class,'getCurrency']);
 Route::post('/login',[AuthController::class,'login'])->name('login');
 Route::get('/forgotpassword',[AuthController::class,'loadForgotpassword']);
 Route::post('/forgotpassword',[AuthController::class,'forgotpassword'])->name('forgotpassword');
@@ -65,6 +66,14 @@ Route::group(['prefix' => 'admin','middleware'=>['web','isAdmin']],function(){
 	Route::post('/deletesubject',[AdminController::class,'deleteSubject'])->name('deletesubject');
 	Route::get('/getsubject',[AdminController::class,'getSubject'])->name('getsubject');
 	
+	//Question manage
+	Route::get('/questionmanage',[AdminController::class,'questionManage']);
+	Route::get('/addquestion',[AdminController::class,'addQuestion']);
+	Route::get('/editquestion/{id}',[AdminController::class,'editQuestion']);
+	Route::post('/addquestion',[AdminController::class,'insertQuestion'])->name('addquestion');
+	Route::post('/updatequestion',[AdminController::class,'updateQuestion'])->name('updatequestion');
+	Route::post('/changequestionstatus',[AdminController::class,'changeQuestionStatus'])->name('changequestionstatus');
+	Route::post('/deletequestion',[AdminController::class,'deleteQuestion'])->name('deletequestion');
 	//Subject chapter
 	Route::post('/addsubjectchapter',[AdminController::class,'addSubjectChapter'])->name('addsubjectchapter');
 	Route::post('/updatesubjectchapter',[AdminController::class,'updateSubjectChapter'])->name('updatesubjectchapter');
@@ -118,6 +127,7 @@ Route::group(['prefix' => 'admin','middleware'=>['web','isAdmin']],function(){
 	Route::post('/deletenote',[AdminController::class,'deleteNote'])->name('deletenote');
 	Route::post('/changenotestatus',[AdminController::class,'changeNoteStatus'])->name('changeNotestatus');
 	
+	
 	//Old paper manage
 	Route::get('/oldpapermanage',[AdminController::class,'oldpaperManage']);
 	Route::post('/addoldpaper',[AdminController::class,'addOldpaper'])->name('addoldpaper');
@@ -162,9 +172,12 @@ Route::group(['prefix' => 'admin','middleware'=>['web','isAdmin']],function(){
 	
 	//batch manage
 	Route::get('/batchmanage',[AdminController::class,'batchManage']);
-	//Route::get('/editbatch/{batchid}',[AdminController::class,'editBatch']);
+	Route::get('/editbatch/{batchid}',[AdminController::class,'editBatch']);
 	Route::get('/addbatch',[AdminController::class,'addBatch']);
 	Route::post('/insertbatch',[AdminController::class,'insertBatch'])->name('insertbatch');
+	Route::post('/updatebatch',[AdminController::class,'updateBatch'])->name('updatebatch');
+	Route::post('/deletebatch',[AdminController::class,'deleteBatch'])->name('deletebatch');
+	Route::post('/changebatchstatus',[AdminController::class,'changeBatchStatus'])->name('changebatchstatus');
 });
 Route::group(['prefix' => 'teacher','middleware'=>['web','isTeacher']],function(){
     Route::get('/dashboard',[TeacherController::class,'dashboard']);

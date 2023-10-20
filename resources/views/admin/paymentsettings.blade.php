@@ -32,9 +32,11 @@
 							<label for="name">Currency</label>
 							<select class="form-control" id="paymentcurrency" name="paymentcurrency">
 							  <option value="">Select currency</option>
-							  <option value="male">Male</option>
-							  <option value="female">Female</option>
-							  <option value="other">Other</option>
+								  @if($currency)
+									@foreach($currency as $cunc)
+								  <option value="{{@$cunc->name}}" {{ $cunc->name == $paymentsettings->currency ? 'selected' : '' }}>{{@$cunc->name}}</option>
+								  @endforeach
+								@endif
 							</select>
 						  </div>
 					</div>
@@ -43,12 +45,24 @@
 							<label for="batchinfo">Payment Type</label>
 							<br>
 							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+							@if(isset($paymentsettings->paymenttype) && $paymentsettings->paymenttype == 'razorpay')
 							  <label class="btn btn-secondary active">
 								<input type="radio" checked="true" name="paymenttype" id="razorpay" autocomplete="off" value="razorpay">Razorpay
 							  </label>
-							  <label class="btn btn-secondary">
+							@else
+							<label class="btn btn-secondary">
+								<input type="radio" name="paymenttype" id="razorpay" autocomplete="off" value="razorpay">Razorpay
+							  </label>	
+							@endif		
+							@if(isset($paymentsettings->paymenttype) && $paymentsettings->paymenttype == 'paypal')
+							  <label class="btn btn-secondary active">
+								<input type="radio" checked="true" name="paymenttype" id="paypal" autocomplete="off" value="paypal">Paypal
+							  </label>
+							@else 
+							<label class="btn btn-secondary">
 								<input type="radio" name="paymenttype" id="paypal" autocomplete="off" value="paypal">Paypal
 							  </label>
+							@endif	
 							</div>
 						  </div>
 					</div>

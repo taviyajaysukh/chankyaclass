@@ -25,18 +25,29 @@ use App\Models\Certificate;
 use App\Models\Batch;
 use App\Models\Batchfeature;
 use App\Models\Batchsubject;
+use App\Models\Question;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
-    //
+	//get currency
+	public function getCurrency(){
+		$currency = DB::select('select * from currency');
+		return response()->json([
+				'status' => 'success',
+				'currency' => $currency,				
+				'message' => 'Currency list'
+			], 200);
+	}
+    //admin dashboard
 	public function dashboard()
     {
         return view('admin.dashboard');
     }
-	//
+	//user maange
 	public function userManage()
     {
 		$users = User::whereIn('role', array('teacher','subadmin','student'))->get();
@@ -521,6 +532,124 @@ class AdminController extends Controller
 					'message' => 'status change successfully!'
 			], 200);
 	}
+	//manage question
+	public  function questionManage(){
+		$question = Question::whereIn('status', array('active','deactive'))->get();
+		return view('admin.questionmanage',['questions'=>$question]);
+	}
+	//add question
+	public  function addQuestion(){
+		$subject = Subject::whereIn('status', array('active','deactive'))->get();
+		return view('admin.addquestion',['subjects'=>$subject]);
+	}
+	//edit question
+	public  function editQuestion($id){
+		$question = Question::find($id);
+		$subject = Subject::whereIn('status', array('active','deactive'))->get();
+		$chapter = chapter::whereIn('status', array('active','deactive'))->get();
+		return view('admin.editquestion',['questions'=>$question,'subjects'=>$subject,'chapters'=>$chapter]);
+	}
+	public function insertQuestion(Request $request){
+		$validator = \Validator::make($request->all(),[
+            'subject' => 'string|required',
+            'chapter' => 'string|required',
+            'addmarks' => 'string|required',
+        ]);
+		if ($validator->fails()) {
+			$error = $validator->errors()->all();
+		    return response()->json([
+				'status' => 'error', 
+				'errors' =>$error, 
+				'message' => 'Some validation error!'
+			],200);
+		}else{
+			$createby = Auth::user()->role;
+			$question = new Question;
+			$question->subject_id = $request->subject;
+			$question->chapter_id = $request->chapter;
+			$question->question = $request->question;
+			$question->optiona = $request->optiona;
+			$question->optionb = $request->optionb;
+			$question->optionc = $request->optionc;
+			$question->optiond = $request->optiond;
+			$question->right_answer = $request->rightanswer;
+			$question->add_marks = $request->addmarks;
+			$question->createdby = $createby;
+			$question->save();
+			return response()->json([
+				'status' => 'success', 
+				'data' =>[], 
+				'message' => 'question saved successfully!'
+			], 200);	
+		}
+	}
+	//update question
+	public function updateQuestion(Request $request){
+		$validator = \Validator::make($request->all(),[
+            'subject' => 'string|required',
+            'chapter' => 'string|required',
+            'addmarks' => 'string|required',
+        ]);
+		if ($validator->fails()) {
+			$error = $validator->errors()->all();
+		    return response()->json([
+				'status' => 'error', 
+				'errors' =>$error, 
+				'message' => 'Some validation error!'
+			],200);
+		}else{
+			$questionid = $request->questionid ?? '';
+			$question = Question::find($questionid);
+			$question->subject_id = $request->subject;
+			$question->chapter_id = $request->chapter;
+			$question->question = $request->question;
+			$question->optiona = $request->optiona;
+			$question->optionb = $request->optionb;
+			$question->optionc = $request->optionc;
+			$question->optiond = $request->optiond;
+			$question->right_answer = $request->rightanswer;
+			$question->add_marks = $request->addmarks;
+			$question->save();
+			return response()->json([
+				'status' => 'success', 
+				'data' =>[], 
+				'message' => 'question saved successfully!'
+			], 200);	
+		}
+	}
+	//change notice status
+	public function changeQuestionStatus(Request $request){
+		$questionid = (int)$request->questionid ?? '';
+		$question = Question::find($questionid);
+		$status = '';
+		if($question->status == 'active'){
+			$status = 'deactive';	
+		}else{
+			$status = 'active';
+		}
+		$question->status = $status;
+		$question->save();
+			return response()->json([
+					'status' => 'success',  
+					'message' => 'status change successfully!'
+			], 200);
+	}
+	//delete question
+	public function deleteQuestion(Request $request){
+		$questionid = (int)$request->questionid ?? '';
+		$question = Question::find($questionid);
+		if ($question && $question->delete()) {
+			return response()->json([
+				'status' => 'success',  
+				'message' => 'question deleted successfully!'
+			], 200);
+		}else{
+			return response()->json([
+				'status' => 'error', 
+				'message' => 'question not found!'
+			], 200);
+		}
+	}
 	public function deleteSubject(Request $request){
 		$subjectId = (int)$request->subjectid ?? '';
 		$subject = Subject::find($subjectId);
@@ -752,7 +881,8 @@ class AdminController extends Controller
 	//get student form
 	public function addStudent()
     {
-        return view('admin.addstudent');
+		$batch = Batch::whereIn('status', array('active','deactive'))->get();
+        return view('admin.addstudent',['batches'=>$batch]);
     }
 	//add student form
 	public function submitStudent(Request $request)
@@ -808,7 +938,7 @@ class AdminController extends Controller
             'gender' =>'required',
             'dateofbirth' =>'string',
             'contactnumber' =>'string',
-            'batch' =>'string',
+            'batch' =>'required',
         ]);
 		$student_imageName = '';
 		if($files=$request->file('student_image')){  
@@ -867,7 +997,8 @@ class AdminController extends Controller
 	//edit get student
 	public function editStudent($studentid){
 		$student = Student::find($studentid);
-		return view('admin.editstudent',['student'=>$student]);
+		$batch = Batch::whereIn('status', array('active','deactive'))->get();
+		return view('admin.editstudent',['student'=>$student,'batches'=>$batch]);
 	}
 	//change upcomming exam status
 	public function changeStudentstatus(Request $request){
@@ -1828,7 +1959,8 @@ class AdminController extends Controller
 	public function paymentSettings()
     {
 		$paymentsetting = Paymentsettings::whereIn('status', array('active','deactive'))->first();
-        return view('admin.paymentsettings',['paymentsettings'=>$paymentsetting]);
+		$currency = DB::select('select * from currency');
+        return view('admin.paymentsettings',['paymentsettings'=>$paymentsetting,'currency'=>$currency]);
     }
 	
 	//update Site setting
@@ -2123,6 +2255,129 @@ class AdminController extends Controller
 			$batch_subject->start_subject_time = $subject_start_time;
 			$batch_subject->end_subject_time = $subject_end_time;
 			$batch_subject->createdby = $createdby;
+			$batch_subject->save();
+			
+			return response()->json([
+				'status' => 'success', 
+				'data' =>[], 
+				'message' => 'batch saved successfully!'
+			], 200);	
+		}
+	}
+	//edit get batch
+	public function editBatch($batchid){
+		$batch = Batch::find($batchid);
+		$batchsubject = Batchsubject::where('batch_id','=',$batchid)->first();
+		$batchfeature = Batchfeature::where('batch_id','=',$batchid)->first();
+		$category = Category::whereIn('status', array('active','deactive'))->get();
+		$subcategory = Subcategory::whereIn('status', array('active','deactive'))->get();
+		$subject = Subject::whereIn('status', array('active','deactive'))->get();
+		$chapter = Chapter::whereIn('status', array('active','deactive'))->get();
+		$teacher = Teacher::whereIn('status', array('active','deactive'))->get();
+		return view('admin.editbatch',['batch'=>$batch,'batchsubject'=>$batchsubject,'batchfeature'=>$batchfeature,'category'=>$category,'subcategory'=>$subcategory,'subject'=>$subject,'chapter'=>$chapter,'teacher'=>$teacher]);
+	}
+	//delete batch 
+	public function deleteBatch(Request $request){
+		$batchid = (int)$request->batchid ?? '';
+		$batch = Batch::find($batchid);
+		if ($batch && $batch->delete()) {
+			return response()->json([
+				'status' => 'success',  
+				'message' => 'batch deleted successfully!'
+			], 200);
+		}else{
+			return response()->json([
+				'status' => 'error', 
+				'message' => 'batch not found!'
+			], 200);
+		}
+	}
+	
+	//change batch status
+	public function changeBatchStatus(Request $request){
+		$batchid = (int)$request->batchid ?? '';
+		$batch = Batch::find($batchid);
+		$status = '';
+		if($batch->status == 'active'){
+			$status = 'deactive';	
+		}else{
+			$status = 'active';
+		}
+		$batch->status = $status;
+		$batch->save();
+			return response()->json([
+					'status' => 'success',  
+					'message' => 'status change successfully!'
+			], 200);
+	}
+	
+	//update batch record
+	public function updateBatch(Request $request){
+		$validator = \Validator::make($request->all(),[
+            'batch_name' => 'string|required',
+
+        ]);
+		$batchid = (int)$request->batchid ?? '';
+		$batchImageName = '';
+		if($files=$request->file('batch_image')){  
+			$name=$files->getClientOriginalName();  
+			$files->move('uploads/batches/',$name);  
+			$batchImageName =$name;
+		}else{
+			$batchImageName =$request->editbatch_imageold;
+		}
+		if ($validator->fails()) {
+			$error = $validator->errors()->all();
+		    return response()->json([
+				'status' => 'error', 
+				'errors' =>$error, 
+				'message' => 'Some validation error!'
+			],200);
+		}else{
+		
+			$batch_category = $request->batch_category ?? '';
+			$batch_subcategory = $request->batch_subcategory ?? '';
+			$batch_name = $request->batch_name ?? '';
+			$start_date = $request->start_date ?? '';
+			$end_date = $request->end_date ?? '';
+			$start_time = $request->start_time ?? '';
+			$end_time = $request->end_time ?? '';
+			$batch_type = $request->batch_type ?? '';
+			$description = $request->description ?? '';
+			$featureheader = $request->featureheader ?? '';
+			$feature = $request->feature ?? '';
+			$batchv_subject = $request->batch_subject ?? '';
+			$batch_chapter = $request->batch_chapter ?? '';
+			$batch_teacher = $request->batch_teacher ?? '';
+			$subject_start_date = $request->subject_start_date ?? '';
+			$subject_end_date = $request->subject_end_date ?? '';
+			$subject_start_time = $request->subject_start_time ?? '';
+			$subject_end_time = $request->subject_end_time ?? '';
+			$batch = Batch::find($batchid);
+			$batch->category_id = $batch_category;
+			$batch->sub_category_id = $batch_subcategory;
+			$batch->batch_name = $batch_name;
+			$batch->start_date = $start_date;
+			$batch->end_date = $end_date;
+			$batch->start_time = $start_time;
+			$batch->end_time = $end_time;
+			$batch->batch_type = $batch_type;
+			$batch->batch_image = $batchImageName;
+			$batch->batch_description = $description;
+			$batch->save();
+			$batch_feature = Batchfeature::find($batchid);
+			$batch_feature->heading = $featureheader;
+			$batch_feature->feature = $feature;
+			$batch_feature->save();
+			
+			$batch_subject = Batchsubject::find($batchid);
+			$batch_subject->teacher_id = $batch_teacher;
+			$batch_subject->batch_subject = $batchv_subject;
+			$batch_subject->batch_chapter = $batch_chapter;
+			$batch_subject->start_subject_date = $subject_start_date;
+			$batch_subject->end_subject_date = $subject_end_date;
+			$batch_subject->start_subject_time = $subject_start_time;
+			$batch_subject->end_subject_time = $subject_end_time;
 			$batch_subject->save();
 			
 			return response()->json([

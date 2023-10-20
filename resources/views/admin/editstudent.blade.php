@@ -23,7 +23,7 @@
       <div class="container-fluid">
 		<div class="card">
 		  <div class="card-body">
-				<form action="/admin/updatestudent" id="addstudent" method="POST" enctype="multipart/form-data">
+				<form action="/admin/updatestudent" id="editstudent" method="POST" enctype="multipart/form-data">
 				@csrf
 				<div class="row">
 					<input type="hidden" name="studentid" value="{{@$student->id}}">
@@ -67,9 +67,11 @@
 							<label for="name">Gender</label>
 							<select class="form-control" id="gender" name="gender">
 							  <option value="">Gender</option>
+							  @if(isset($student->gender))
 							  @foreach($gender as $key=>$val)
 								<option value="{{$key}}" {{ $key == $student->gender ? 'selected' : '' }}>{{$val}}</option>
 							  @endforeach
+							  @endif
 							</select>
 						  </div>
 					</div>
@@ -96,7 +98,7 @@
 							<label for="batchinfo">Batch Inforamtion</label>
 							<br>
 							<div class="btn-group btn-group-toggle" data-toggle="buttons">
-							@if($student->batch_information == 'offline')
+							@if(isset($student->batch_information) && $student->batch_information == 'offline')
 							  <label class="btn btn-secondary active">
 								<input type="radio" checked="true" name="batchinfo" id="offline" autocomplete="off" value="offline"> Offline
 							  </label>
@@ -105,7 +107,7 @@
 								<input type="radio" name="batchinfo" id="offline" autocomplete="off" value="offline"> Offline
 							  </label>
 							@endif
-							@if($student->batch_information == 'online')
+							@if(isset($student->batch_information) && $student->batch_information == 'online')
 							  <label class="btn btn-secondary active">
 								<input type="radio" checked="true" name="batchinfo" id="offline" autocomplete="off" value="online"> Online
 							  </label>
@@ -121,17 +123,15 @@
 					<div class="col-md-6">
 						<div class="form-group">
 							<label for="batch">Batch</label>
-							@php 
-								$batch = array(
-									"1"=>"java",
-									"2"=>"php"
-								);
-							@endphp
 							<select class="form-control" id="batch" name="batch">
-							  <option value="">Select batch</option>
-							  @foreach($batch as $key=>$val)
-								<option value="{{$key}}" {{ $key == $student->batch ? 'selected' : '' }}>{{$val}}</option>
+							<?php
+								$stdbatch = $student->batch ?? '';
+							?>
+							  @if($batches)
+								@foreach($batches as $batch)
+							  <option value="{{@$batch->id}}" {{$batch->id == $stdbatch ? 'selected' : '' }}>{{@$batch->batch_name}}</option>
 							  @endforeach
+							@endif
 							</select>
 						  </div>
 					</div>

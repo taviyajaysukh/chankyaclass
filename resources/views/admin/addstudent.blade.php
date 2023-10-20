@@ -100,9 +100,12 @@
 						<div class="form-group">
 							<label for="batch">Batch</label>
 							<select class="form-control" id="batch" name="batch">
-							  <option value="">Select batch</option>
-							  <option value="1">java</option>
-							  <option value="2">php</option>
+							<option value="">Select batch</option>
+							  @if($batches)
+								@foreach($batches as $batch)
+							  <option value="{{@$batch->id}}">{{@$batch->batch_name}}</option>
+							  @endforeach
+							@endif
 							</select>
 						  </div>
 					</div>

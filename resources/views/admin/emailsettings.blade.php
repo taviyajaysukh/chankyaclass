@@ -32,12 +32,24 @@
 							<label for="batchinfo">Server Type</label>
 							<br>
 							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+							@if(isset($emailsettings->servertype) && $emailsettings->servertype == 'servermail')
 							  <label class="btn btn-secondary active">
 								<input type="radio" checked="true" name="servertype" id="servermail" autocomplete="off" value="servermail">Server Mail (Default)
 							  </label>
-							  <label class="btn btn-secondary">
+							@else  
+								<label class="btn btn-secondary">
+								<input type="radio" name="servertype" id="servermail" autocomplete="off" value="servermail">Server Mail (Default)
+							  </label>
+							@endif
+							@if(isset($emailsettings->servertype) && $emailsettings->servertype == 'smtpserver')
+							  <label class="btn btn-secondary active">
+								<input type="radio" checked="true" name="servertype" id="smtpserver" autocomplete="off" value="smtpserver">SMTP Server
+							  </label>
+							@else
+							   <label class="btn btn-secondary">
 								<input type="radio" name="servertype" id="smtpserver" autocomplete="off" value="smtpserver">SMTP Server
 							  </label>
+							@endif		
 							</div>
 						  </div>
 					</div>
@@ -46,12 +58,24 @@
 							<label for="batchinfo">SMTP Encryption</label>
 							<br>
 							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+							@if(isset($emailsettings->smtpencrypted) && $emailsettings->smtpencrypted == 'tlc')
 							  <label class="btn btn-secondary active">
 								<input type="radio" checked="true" name="smtpencrypted" id="tlc" autocomplete="off" value="tlc">TLC
 							  </label>
+							@else
+							   <label class="btn btn-secondary">
+								<input type="radio" name="smtpencrypted" id="tlc" autocomplete="off" value="tlc">TLC
+							  </label>	
+							@endif
+							@if(isset($emailsettings->smtpencrypted) && $emailsettings->smtpencrypted == 'ssl')	
+							  <label class="btn btn-secondary active">
+								<input type="radio" checked="true" name="smtpencrypted" id="ssl" autocomplete="off" value="ssl">SSL
+							  </label>
+							@else
 							  <label class="btn btn-secondary">
 								<input type="radio" name="smtpencrypted" id="ssl" autocomplete="off" value="ssl">SSL
 							  </label>
+							@endif		
 							</div>
 						  </div>
 					</div>

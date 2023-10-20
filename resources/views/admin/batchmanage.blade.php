@@ -37,6 +37,11 @@
                   <thead>
                   <tr>
                     <th>Index</th>
+                    <th>Batch Name</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Batch Time</th>
+                    <th>Batch Type</th>
 					<th>Created By</th>
 					<th>Status</th>
                     <th>Action</th>
@@ -47,6 +52,11 @@
 						@foreach($batches as $batch)
 							<tr>
 								<td>{{$batch->id}}</td>
+								<td>{{$batch->batch_name}}</td>
+								<td>{{$batch->start_date}}</td>
+								<td>{{$batch->end_date}}</td>
+								<td>{{$batch->start_time}} - {{$batch->end_time}}</td>
+								<td>{{$batch->batch_type}}</td>
 								<td>{{$batch->createdby}}</td>
 								<td>
 									@if($batch->status == 'active')
@@ -57,7 +67,7 @@
 								</td>
 								<td class="text-right py-0 align-middle">
 								  <div class="btn-group btn-group-sm">
-									<a href="javascript:void(0)" class="btn btn-info"><i class="fas fa-edit"></i></a>
+									<a href="editbatch/{{$batch->id}}" class="btn btn-info"><i class="fas fa-edit"></i></a>
 									<a href="javascript:void(0)" class="btn btn-danger delbatchid" data-toggle="modal" data-target="#deleteBatchModal" id="deletebatchidid" data-id="{{ $batch->id }}"><i class="fas fa-trash"></i></a>
 								
 								  </div>
@@ -69,6 +79,11 @@
                   <tfoot>
                   <tr>
                     <th>Index</th>
+                    <th>Batch Name</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Batch Time</th>
+                    <th>Batch Type</th>
 					<th>Created By</th>
 					<th>Status</th>
                     <th>Action</th>

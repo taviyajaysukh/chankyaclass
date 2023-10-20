@@ -1,4 +1,9 @@
 <!-- Add User Model Admin -->
+@php
+	$batches = \App\Models\Batch::whereIn('status', array('active','deactive'))->get();
+	$subjects = \App\Models\Subject::whereIn('status', array('active','deactive'))->get();
+	$chapters = \App\Models\Chapter::whereIn('status', array('active','deactive'))->get();
+@endphp
 <div class="modal fade" id="addUserModal">
 	<div class="modal-dialog modal-lg">
 	  <div class="modal-content">
@@ -1194,9 +1199,12 @@
 						<div class="form-group">
 							<label>Batch</label>
 							<select class="form-control bookbatch"id="bookbatch" name="batch">
-							  <option value="">Select batch</option>
-							  <option value="php">Php</option>
-							  <option value="java">Java</option>
+							<option value="">select batch</option>
+							  @if($batches)
+								@foreach($batches as $batch)
+							  <option value="{{@$batch->id}}">{{@$batch->batch_name}}</option>
+							  @endforeach
+							@endif
 							</select>
 						 </div>
 					</div>
@@ -1204,9 +1212,12 @@
 						<div class="form-group">
 							<label>Subject</label>
 							<select class="form-control booksubject"id="booksubject" name="subject">
-							  <option value="">Select subject</option>
-							  <option value="php">Php</option>
-							  <option value="java">Java</option>
+							<option value="">Select subject</option>
+							  @if($subjects)
+								@foreach($subjects as $subject)
+							  <option value="{{@$subject->id}}">{{@$subject->subjectname}}</option>
+							  @endforeach
+							@endif
 							</select>
 						 </div>
 					</div>
@@ -1256,9 +1267,11 @@
 						<div class="form-group">
 							<label>Batch</label>
 							<select class="form-control bookbatch"id="editbookbatch" name="batch">
-							  <option value="">Select batch</option>
-							  <option value="php">Php</option>
-							  <option value="java">Java</option>
+							  @if($batches)
+								@foreach($batches as $batch)
+							  <option value="{{@$batch->id}}">{{@$batch->batch_name}}</option>
+							  @endforeach
+							@endif
 							</select>
 						 </div>
 					</div>
@@ -1266,9 +1279,11 @@
 						<div class="form-group">
 							<label>Subject</label>
 							<select class="form-control booksubject"id="editbooksubject" name="subject">
-							  <option value="">Select subject</option>
-							  <option value="php">Php</option>
-							  <option value="java">Java</option>
+							  @if($subjects)
+								@foreach($subjects as $subject)
+							  <option value="{{@$subject->id}}">{{@$subject->subjectname}}</option>
+							  @endforeach
+							@endif
 							</select>
 						 </div>
 					</div>
@@ -1340,29 +1355,32 @@
 							<label>Batch</label>
 							<select class="form-control notebatch"id="notebatch" name="batch">
 							  <option value="">Select batch</option>
-							  <option value="php">Php</option>
-							  <option value="java">Java</option>
+							  @if($batches)
+								@foreach($batches as $batch)
+							  <option value="{{@$batch->id}}">{{@$batch->batch_name}}</option>
+							  @endforeach
+							@endif
 							</select>
 						 </div>
 					</div>
 					<div class="col-md-6">
 						<div class="form-group">
 							<label>Subject</label>
-							<select class="form-control notesubject"id="notesubject" name="subject">
-							  <option value="">Select subject</option>
-							  <option value="php">Php</option>
-							  <option value="java">Java</option>
+							<select class="form-control notesubject" id="notesubject" name="subject">
+							  <option value="">Select Subject</option>
+							  @if($subjects)
+								@foreach($subjects as $subject)
+							  <option value="{{@$subject->id}}">{{@$subject->subjectname}}</option>
+							  @endforeach
+							@endif
 							</select>
 						 </div>
 					</div>
 					<div class="col-md-6">
 						<div class="form-group">
 							<label>Chapter</label>
-							<select class="form-control notechapter"id="notechapter" name="chapter">
+							<select class="form-control notechapter" id="notechapter" name="chapter">
 							  <option value="">Select chapter</option>
-							  <option value="chapter1">Chapter1</option>
-							  <option value="chapter2">Chapter2</option>
-							  
 							</select>
 						 </div>
 					</div>
@@ -1413,8 +1431,11 @@
 							<label>Batch</label>
 							<select class="form-control notebatch"id="editnotebatch" name="batch">
 							  <option value="">Select batch</option>
-							  <option value="php">Php</option>
-							  <option value="java">Java</option>
+							  @if($batches)
+								@foreach($batches as $batch)
+							  <option value="{{@$batch->id}}">{{@$batch->batch_name}}</option>
+							  @endforeach
+							@endif
 							</select>
 						 </div>
 					</div>
@@ -1423,8 +1444,11 @@
 							<label>Subject</label>
 							<select class="form-control notesubject"id="editnotesubject" name="subject">
 							  <option value="">Select subject</option>
-							  <option value="php">Php</option>
-							  <option value="java">Java</option>
+							  @if($subjects)
+								@foreach($subjects as $subject)
+							  <option value="{{@$subject->id}}">{{@$subject->subjectname}}</option>
+							  @endforeach
+							@endif
 							</select>
 						 </div>
 					</div>
@@ -1433,8 +1457,11 @@
 							<label>Chapter</label>
 							<select class="form-control notechapter"id="editnotechapter" name="chapter">
 							  <option value="">Select chapter</option>
-							  <option value="chapter1">Chapter1</option>
-							  <option value="chapter2">Chapter2</option>
+							  @if($chapters)
+								@foreach($chapters as $cpt)
+							  <option value="{{@$cpt->id}}">{{@$cpt->chaptername}}</option>
+							  @endforeach
+							@endif
 							</select>
 						 </div>
 					</div>
@@ -1505,8 +1532,11 @@
 							<label>Batch</label>
 							<select class="form-control oldpaperbatch"id="oldpaperbatch" name="batch">
 							  <option value="">Select batch</option>
-							  <option value="php">Php</option>
-							  <option value="java">Java</option>
+							  @if($batches)
+								@foreach($batches as $batch)
+							  <option value="{{@$batch->id}}">{{@$batch->batch_name}}</option>
+							  @endforeach
+							@endif
 							</select>
 						 </div>
 					</div>
@@ -1515,8 +1545,11 @@
 							<label>Subject</label>
 							<select class="form-control oldpapersubject"id="oldpapersubject" name="subject">
 							  <option value="">Select subject</option>
-							  <option value="php">Php</option>
-							  <option value="java">Java</option>
+							  @if($subjects)
+								@foreach($subjects as $sub)
+							  <option value="{{@$sub->id}}">{{@$sub->subjectname}}</option>
+							  @endforeach
+							@endif
 							</select>
 						 </div>
 					</div>
@@ -1567,8 +1600,11 @@
 							<label>Batch</label>
 							<select class="form-control oldpaperbatch"id="editoldpaperbatch" name="batch">
 							  <option value="">Select batch</option>
-							  <option value="php">Php</option>
-							  <option value="java">Java</option>
+							  @if($batches)
+								@foreach($batches as $batch)
+							  <option value="{{@$batch->id}}">{{@$batch->batch_name}}</option>
+							  @endforeach
+							@endif
 							</select>
 						 </div>
 					</div>
@@ -1577,8 +1613,11 @@
 							<label>Subject</label>
 							<select class="form-control oldpapersubject"id="editoldpapersubject" name="subject">
 							  <option value="">Select subject</option>
-							  <option value="php">Php</option>
-							  <option value="java">Java</option>
+							  @if($subjects)
+								@foreach($subjects as $sub)
+							  <option value="{{@$sub->id}}">{{@$sub->subjectname}}</option>
+							  @endforeach
+							@endif
 							</select>
 						 </div>
 					</div>
@@ -1814,8 +1853,11 @@
 							<label>Batch</label>
 							<select class="form-control videobatch" id="videobatch" name="videobatch">
 							  <option value="">Select batch</option>
-							  <option value="java">Java</option>
-							  <option value="php">Php</option>
+							  @if($batches)
+								@foreach($batches as $batch)
+							  <option value="{{@$batch->id}}">{{@$batch->batch_name}}</option>
+							  @endforeach
+							@endif
 							</select>
 						 </div>
 					</div>
@@ -1824,18 +1866,19 @@
 							<label>Subject</label>
 							<select class="form-control videosubject" id="videosubject" name="videosubject">
 							  <option value="">Select subject</option>
-							  <option value="java">Java</option>
-							  <option value="php">Php</option>
+							  @if($subjects)
+								@foreach($subjects as $subject)
+							  <option value="{{@$subject->id}}">{{@$subject->subjectname}}</option>
+							  @endforeach
+							@endif
 							</select>
 						 </div>
 					</div>
 					<div class="col-md-12">
 						<div class="form-group">
 							<label>Chapter</label>
-							<select class="form-control videochapter"id="videochapter" name="videochapter">
-							  <option value="">Select chapter</option>
-							  <option value="chapter1">Chapter1</option>
-							  <option value="chapter2">Chapter2</option>
+							<select class="form-control videochapter" id="videochapter" name="videochapter">
+							 
 							</select>
 						 </div>
 					</div>
@@ -1918,9 +1961,11 @@
 						<div class="form-group">
 							<label>Batch</label>
 							<select class="form-control editvideobatch" id="editvideobatch" name="editvideobatch">
-							  <option value="">Select batch</option>
-							  <option value="java">Java</option>
-							  <option value="php">Php</option>
+							  @if($batches)
+								@foreach($batches as $batch)
+							  <option value="{{@$batch->id}}">{{@$batch->batch_name}}</option>
+							  @endforeach
+							@endif
 							</select>
 						 </div>
 					</div>
@@ -1928,9 +1973,11 @@
 						<div class="form-group">
 							<label>Subject</label>
 							<select class="form-control editvideosubject" id="editvideosubject" name="editvideosubject">
-							  <option value="">Select subject</option>
-							  <option value="java">Java</option>
-							  <option value="php">Php</option>
+							  @if($subjects)
+								@foreach($subjects as $subject)
+							  <option value="{{@$subject->id}}">{{@$subject->subjectname}}</option>
+							  @endforeach
+							@endif
 							</select>
 						 </div>
 					</div>
@@ -1938,9 +1985,11 @@
 						<div class="form-group">
 							<label>Chapter</label>
 							<select class="form-control editvideochapter"id="editvideochapter" name="editvideochapter">
-							  <option value="">Select chapter</option>
-							  <option value="chapter1">Chapter1</option>
-							  <option value="chapter2">Chapter2</option>
+							  @if($chapters)
+								@foreach($chapters as $chapter)
+							  <option value="{{@$chapter->id}}">{{@$chapter->chaptername}}</option>
+							  @endforeach
+							@endif
 							</select>
 						 </div>
 					</div>
@@ -2019,3 +2068,48 @@
 	  </div>
 	</div>
  </div>
+ 
+ 
+<!-- Admin modal for book delete -->
+<div class="modal fade" id="deleteBatchModal">
+	<div class="modal-dialog">
+	  <div class="modal-content">
+	  <input type="hidden" name="deletebatchid" id="deletebatchid">
+		<div class="modal-header">
+		  <h4 class="modal-title">Confirmation</h4>
+		  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		  </button>
+		</div>
+		<div class="modal-body">
+		  <p>Are you sure delete this record?</p>
+		</div>
+		<div class="modal-footer justify-content-between">
+		  <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+		  <button type="button" id="deletebatchbtn" class="btn btn-danger">Delete</button>
+		</div>
+	  </div>
+	</div>
+ </div> 
+ 
+<!-- Admin modal for question delete -->
+<div class="modal fade" id="deleteQuestionModal">
+	<div class="modal-dialog">
+	  <div class="modal-content">
+	  <input type="hidden" name="deletequestionid" id="deletequestionid">
+		<div class="modal-header">
+		  <h4 class="modal-title">Confirmation</h4>
+		  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		  </button>
+		</div>
+		<div class="modal-body">
+		  <p>Are you sure delete this record?</p>
+		</div>
+		<div class="modal-footer justify-content-between">
+		  <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+		  <button type="button" id="deletequestionbtn" class="btn btn-danger">Delete</button>
+		</div>
+	  </div>
+	</div>
+ </div> 
