@@ -1,8 +1,3 @@
-<footer class="main-footer">
-    <strong>Copyright &copy; 2023-2025 <a href="#">Chankya academy</a>.</strong>
-    All rights reserved.
-  </footer>
-
   <!-- Control Sidebar -->
   <aside class="control-sidebar control-sidebar-dark">
     <!-- Control sidebar content goes here -->
@@ -69,7 +64,6 @@
 
 <!--<script src="{{asset('assets/')}}/script.js"></script>-->
 <script>
-
 //add question ckeditor
 let questionval = '';
 let questionvala = '';
@@ -80,32 +74,27 @@ ClassicEditor.create( document.querySelector( '#question' )).then( editor => {
 	questionval = editor;
 } )
 .catch( err => {
-	console.error( err.stack );
 } );
 
 ClassicEditor.create( document.querySelector( '#optiona' ) ).then( editor => {
 	questionvala = editor;
 } )
 .catch( err => {
-	console.error( err.stack );
 } );
 ClassicEditor.create( document.querySelector( '#optionb' ) ).then( editor => {
 	questionvalb = editor;
 } )
 .catch( err => {
-	console.error( err.stack );
 } );
 ClassicEditor.create( document.querySelector( '#optionc' ) ).then( editor => {
 	questionvalc = editor;
 } )
 .catch( err => {
-	console.error( err.stack );
 } );
 ClassicEditor.create( document.querySelector( '#optiond' ) ).then( editor => {
 	questionvald = editor;
 } )
 .catch( err => {
-	console.error( err.stack );
 } );
 
 //edit question ckeditor
@@ -118,32 +107,27 @@ ClassicEditor.create( document.querySelector( '#editquestion' )).then( editor =>
 	editquestionval = editor;
 } )
 .catch( err => {
-	console.error( err.stack );
 } );
 
 ClassicEditor.create( document.querySelector( '#editoptiona' ) ).then( editor => {
 	editquestionvala = editor;
 } )
 .catch( err => {
-	console.error( err.stack );
 } );
 ClassicEditor.create( document.querySelector( '#editoptionb' ) ).then( editor => {
 	editquestionvalb = editor;
 } )
 .catch( err => {
-	console.error( err.stack );
 } );
 ClassicEditor.create( document.querySelector( '#editoptionc' ) ).then( editor => {
 	editquestionvalc = editor;
 } )
 .catch( err => {
-	console.error( err.stack );
 } );
 ClassicEditor.create( document.querySelector( '#editoptiond' ) ).then( editor => {
 	editquestionvald = editor;
 } )
 .catch( err => {
-	console.error( err.stack );
 } );
       
 $(function () {
@@ -219,7 +203,13 @@ $(function () {
 	$("#questionTable").DataTable({
       "responsive": true, "lengthChange": false, "autoWidth": false,
       "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-    }).buttons().container().appendTo('#batchTable_wrapper .col-md-6:eq(0)');
+    }).buttons().container().appendTo('#questionTable_wrapper .col-md-6:eq(0)');
+	
+	$("#createPaperTable").DataTable();
+	$("#paperTable").DataTable({
+      "responsive": true, "lengthChange": false, "autoWidth": false,
+      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+    }).buttons().container().appendTo('#paperTable_wrapper .col-md-6:eq(0)');
 	//end datatable
 	//select 2
 	$('.js-example-basic-single').select2();
@@ -3135,7 +3125,13 @@ $.validator.addMethod("greaterStart", function (value, element, params) {
 		}
 		
 	});
-	
+	$('.default_time').clockpicker({
+		placement: 'bottom',
+		align: 'left',
+		autoclose: true,
+		twelvehour: true,
+		'default': 'now'
+	});
 	$('#start_time').clockpicker({
 		placement: 'bottom',
 		align: 'left',
@@ -3675,7 +3671,205 @@ $.validator.addMethod("greaterStart", function (value, element, params) {
             }            
         });
 	})
+	
+	
+	//create paper js
+	$("#opencreatepaper").click(function(){
+		let countval = $(".countval").val()
+		if(countval > 0){
+			$("#createPaperModal").modal('show')	
+		}else{
+			toastr.error('Please select at list one question')
+		}
+	})
+	$(".resetpaper").click(function(){
+		$(".createpapercheck").prop('checked',false)
+		$(".selectedquestion").text(0+" ")
+		$(".countval").val(0)
+		$(".totalselectqs").text(0)
+	})
+	let papercount = 0;
+	$('input[name=createpaperallcheck]').change(function(){
+		papercount = 0
+		if ($(this).is(":checked")){
+			$('input[name=createpapercheck]').prop('checked',true)
+			$(".qtn_containr").css({'display':'block','visibility':'visible'})
+			$('input[name=createpapercheck]').each(function(){
+				papercount++;
+			})
+		}else{
+			$('input[name=createpapercheck]').prop('checked',false)
+			$(".qtn_containr").css({'display':'none','visibility':'hidden'})
+			papercount = 0;
+		}
+		$(".selectedquestion").text(papercount+" ")
+		$(".countval").val(papercount)
+		$(".totalselectqs").text(papercount)
+	});
+	$('input[name=createpapercheck]').change(function (e) {
+		$('input[name=createpaperallcheck]').prop('checked',false)
+		if ($(this).is(":checked")){
+			papercount++
+			$(".qtn_containr").css({'display':'block','visibility':'visible'})
+		}else{
+			if(papercount > 0){
+				papercount--
+			}
+			if(papercount == 0){
+				$(".qtn_containr").css({'display':'none','visibility':'hidden'})
+			}
+		}
+		$(".selectedquestion").text(papercount+" ")
+		$(".countval").val(papercount)
+		$(".totalselectqs").text(papercount)
+	})
+	$(".ismaking").click(function(){
+		if($(this).is(":checked")){
+			$(".isnotmaking").prop('checked',false)
+			$(".divnegativevalue").css({'display':'block','visibility':'visible'})
+		}else{
+			$(".divnegativevalue").css({'display':'none','visibility':'hidden'})
+		}
+	})
+	$(".isnotmaking").click(function(){
+		if($(this).is(":checked")){
+			$(".divnegativevalue").css({'display':'none','visibility':'hidden'})
+			$(".ismaking").prop('checked',false)
+		}else{
+			
+			$(".divnegativevalue").css({'display':'block','visibility':'visible'})
+		}
+	})
+	$(".divnegativevalue").css({'display':'none','visibility':'hidden'})
+	
+	$("#createpaper").click(function(){
+		let papertype = $('#papertype').find(":selected").val();
+		let paperbatch = $('#paperbatch').find(":selected").val();
+		let papername = $("#papername").val()
+		let timeduration = $("#timeduration").val()
+		let inputnegativevalue = $("#negativevalue").val()
+		let mocktest_schedule_date = $("#mocktest_schedule_date").val()
+		let mocktest_schedule_time = $("#mocktest_schedule_time").val()
+		let totalselectqs = $(".totalselectqs").text()
+		let questionids = []
+		$('input[name=createpapercheck]:checked').each(function(){
+			let qids = $(this).val();
+			questionids.push(qids)
+		})
+		let negativevalue = 0;
+		if(!$('.isnotmaking').is(":checked") && !$('.ismaking').is(":checked")){
+			negativevalue = 0.25;
+		}else if($('.isnotmaking').is(":checked")){
+			negativevalue = 0;
+		}else if(inputnegativevalue !='' && $('.ismaking').is(":checked")){
+			negativevalue = inputnegativevalue
+		}
+		var paperform_data = new FormData();
+		let paperValid = true;
+		if(papertype == ''){
+			toastr.error('Please select paper type');
+			paperValid = false;
+		}else if(papertype == 'mocktestpaper' && mocktest_schedule_date == ''){
+			toastr.error('Please select schedule date');
+			paperValid = false;
+		}else if(papertype == 'mocktestpaper' && mocktest_schedule_time == ''){
+			toastr.error('Please select schedule time');
+			paperValid = false;
+		}else if(papername == ''){
+			toastr.error('Please enter paper name');
+			paperValid = false;
+		}else if(timeduration == ''){
+			toastr.error('Please enter time duration')
+			paperValid = false;
+		}else if(paperbatch == ''){
+			toastr('Please select batch')
+			paperValid = false;
+		}
+		if(paperValid){
+			paperform_data.append("papertype",papertype)
+			paperform_data.append("paperbatch",paperbatch)
+			paperform_data.append("papername",papername)
+			paperform_data.append("mocktest_schedule_date",mocktest_schedule_date)
+			paperform_data.append("mocktest_schedule_time",mocktest_schedule_time)
+			paperform_data.append("timeduration",timeduration)
+			paperform_data.append("negativevalue",negativevalue)
+			paperform_data.append("totalselectqs",parseInt(totalselectqs))
+			paperform_data.append("questionids",questionids)
+			paperform_data.append("_token", "{{ csrf_token() }}")
+			$.ajax({
+				url: '/admin/submitcreatepaper',
+				type: 'POST',
+				processData: false,
+				cache: false,
+				contentType: false,
+				data: paperform_data,
+				success: function(response) {
+					if(response?.status == "success"){
+						toastr.success(response?.message || 'save successfully...')
+						$('.modal').modal('hide')
+						setTimeout(()=>{
+							window.location = window.location.href
+						},2000)
+					}else{
+						toastr.error(response?.message || 'Record not found!');
+					}
+				}            
+			});	
+		}		
+	});
+	
+	//selectbox change
+	$("#papertype").change(function(){
+		let paperval =  $(this).find(':selected').val();
+		let papertext =  $(this).find(':selected').text();
+		if(paperval == 'mocktestpaper'){
+			$('.mocktestschedule').css({'display':'block','visibility':'visible'});
+		}else{
+			$('.mocktestschedule').css({'display':'none','visibility':'hidden'});
+		}
+	})
+  $('#deletepaperbtn').click(function(){
+		let paperid = $('#deletepaperid').val()
+		$.ajax({
+            url: '/admin/deletepaper',
+            type: 'POST',
+            data: {'paperid':paperid,"_token": "{{ csrf_token() }}"},
+            success: function(response) {
+                if(response?.status == "success"){
+					toastr.success(response?.message || 'delete paper successfully...')	
+					$('.modal').modal('hide')
+					setTimeout(()=>{
+						window.location = window.location.href
+					},2000)
+				}else{
+					toastr.error(response?.message || 'Record not found!');
+				}
+            }            
+        });
+	})
+	
 });
+function getpaperid(paperid,status){
+	if(status == 'delete'){
+	  $("#deletepaperid").val(paperid)
+	}else{
+		$.ajax({
+            url: '/admin/changepaperstatus',
+            type: 'POST',
+            data: {'paperid':paperid,"_token": "{{ csrf_token() }}"},
+            success: function(response) {
+                if(response?.status == "success"){
+					toastr.success(response?.message || 'status change successfully...')	
+					setTimeout(()=>{
+						window.location = window.location.href
+					},2000)
+				}else{
+					toastr.error(response?.message || 'Record not found!');
+				}
+            }            
+        });
+	}
+}
 function addfeature(){
 	var list_fieldHTML = '<div class="subfeature"><input type="text" name="feature[]" class="form-control feature" placeholder="feature"><div class="adddeletefeature"><i class="fa fa-plus add_new_feature eb_add_sheading assSubHeading" onclick="addfeature()"></i><i class="fa fa-trash eb_rem_sheading removeSubHeading" onclick="removefeature(this)"></i></div></div>'; 
 	$('.featurewrapper').append(list_fieldHTML); //Add field html

@@ -2113,3 +2113,105 @@
 	  </div>
 	</div>
  </div> 
+ 
+ 
+<!-- create paper modal -->	  
+<div class="modal fade" id="createPaperModal">
+	<div class="modal-dialog modal-lg">
+	  <div class="modal-content">
+		<div class="modal-header">
+		  <h4 class="modal-title">Create Exam</h4>
+		  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		  </button>
+		</div>
+		<div class="modal-body">
+				<h3>TOTAL SELECTED QUESTIONS : <span class="totalselectqs"></span></h3>
+				<div class="row">
+					<input type="hidden" class="countval">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>Paper Type</label>
+							<select class="form-control papertype" id="papertype" name="papertype">
+							  <option value="">Select paper type</option>
+							  <option value="mocktestpaper">Mock Test Paper</option>
+							  <option value="practicepaper">Practice Paper</option>
+							</select>
+						 </div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>Paper Name</label>
+							<input type="text" name="papername" id="papername" class="form-control" placeholder="Paper name">
+						 </div>
+					</div>
+					<div class="col-md-6 mocktestschedule">
+						<div class="form-group">
+							<label>Mock test schedule date</label>
+							<input type="date" name="mocktest_schedule_date" id="mocktest_schedule_date" class="form-control" placeholder="Schedule date">
+						 </div>
+					</div>
+					<div class="col-md-6 mocktestschedule">
+						<div class="form-group">
+							<label>Mock test schedule time</label>
+							<input type="text" name="mocktest_schedule_time" id="mocktest_schedule_time" class="form-control default_time" placeholder="Schedule time">
+						 </div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>Time Duration (Min</label>
+							<input type="number" name="timeduration" id="timeduration" class="form-control" placeholder="Time duration in minute">
+						 </div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>Batch</label>
+							<select class="form-control paperbath" id="paperbatch" name="paperbatch">
+							<option value="">Please select batch</option>
+							  @if($batches)
+								@foreach($batches as $batch)
+							  <option value="{{@$batch->id}}">{{@$batch->batch_name}}</option>
+							  @endforeach
+							@endif
+							</select>
+						 </div>
+					</div>
+					<div class="col-md-12">
+						Set Negative Marking % <input type="checkbox" class="ismaking"> Negative Marking Disable                     <input type="checkbox" class="isnotmaking">	
+						<p class="text-red">Note :- If not checked then it will take default value (0.25%) for negative marking.</p>	
+					</div>	
+					<div class="col-md-12 divnegativevalue">
+						<div class="form-group">
+							<input type="number" name="negativevalue" id="negativevalue" class="form-control" placeholder="Please enter value %">
+						 </div>
+					</div>
+					<div class="col-md-2">
+						<button type="button" id="createpaper" class="btn btn-success btn-block">Save</button>
+					</div>
+				</div>
+		</div>
+	  </div>
+	</div>
+</div> 
+
+<!-- Admin modal for question delete -->
+<div class="modal fade" id="deletePaperModal">
+	<div class="modal-dialog">
+	  <div class="modal-content">
+	  <input type="hidden" name="deletepaperid" id="deletepaperid">
+		<div class="modal-header">
+		  <h4 class="modal-title">Confirmation</h4>
+		  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		  </button>
+		</div>
+		<div class="modal-body">
+		  <p>Are you sure delete this record?</p>
+		</div>
+		<div class="modal-footer justify-content-between">
+		  <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+		  <button type="button" id="deletepaperbtn" class="btn btn-danger">Delete</button>
+		</div>
+	  </div>
+	</div>
+ </div>

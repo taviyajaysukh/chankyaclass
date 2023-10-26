@@ -129,7 +129,7 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="{{ url('/admin/manageextraclasses') }}" class="nav-link">
+                <a href="{{ url('/admin/extraclassesmanage') }}" class="nav-link">
                   <i class="fas fa-angle-right left"></i>
                   <p>Manage extra classes</p>
                 </a>
@@ -181,9 +181,15 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="javascript:void(0)" class="nav-link">
+                <a href="createpaper" class="nav-link">
                   <i class="fas fa-angle-right left"></i>
-                  <p>{{ __('label.categorymanager') }}</p>
+                  <p>Create Paper</p>
+                </a>
+              </li>
+			  <li class="nav-item">
+                <a href="exammanage" class="nav-link">
+                  <i class="fas fa-angle-right left"></i>
+                  <p>Paper Manage</p>
                 </a>
               </li>
 			 </ul>

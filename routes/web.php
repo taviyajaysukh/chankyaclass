@@ -177,7 +177,16 @@ Route::group(['prefix' => 'admin','middleware'=>['web','isAdmin']],function(){
 	Route::post('/insertbatch',[AdminController::class,'insertBatch'])->name('insertbatch');
 	Route::post('/updatebatch',[AdminController::class,'updateBatch'])->name('updatebatch');
 	Route::post('/deletebatch',[AdminController::class,'deleteBatch'])->name('deletebatch');
-	Route::post('/changebatchstatus',[AdminController::class,'changeBatchStatus'])->name('changebatchstatus');
+	Route::post('/changebatchstatuschangebatchstatus',[AdminController::class,'changeBatchStatus'])->name('changebatchstatus');
+	
+	
+	//create paper maangement
+	Route::get('/editpaper/{id}',[AdminController::class,'editPaper']);
+	Route::get('/exammanage',[AdminController::class,'examManage']);
+	Route::get('/createpaper',[AdminController::class,'createPaper']);
+	Route::post('/submitcreatepaper',[AdminController::class,'submitCreatePaper'])->name('submitcreatepaper');
+	Route::post('/deletepaper',[AdminController::class,'deletePaper'])->name('deletepaper');
+	Route::post('/changepaperstatus',[AdminController::class,'changePaperStatus'])->name('changePaperstatus');
 });
 Route::group(['prefix' => 'teacher','middleware'=>['web','isTeacher']],function(){
     Route::get('/dashboard',[TeacherController::class,'dashboard']);

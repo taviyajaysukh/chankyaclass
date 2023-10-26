@@ -26,6 +26,8 @@ use App\Models\Batch;
 use App\Models\Batchfeature;
 use App\Models\Batchsubject;
 use App\Models\Question;
+use App\Models\Exam;
+use App\Models\Paper;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -2189,7 +2191,6 @@ class AdminController extends Controller
 	public function insertBatch(Request $request){
 		$validator = \Validator::make($request->all(),[
             'batch_name' => 'string|required',
-
         ]);
 		$batchImageName = '';
 		if($files=$request->file('batch_image')){  
@@ -2387,4 +2388,95 @@ class AdminController extends Controller
 			], 200);	
 		}
 	}
+	//manage exam
+	public function examManage(){
+		$paper = Paper::whereIn('status', array('active','deactive'))->get();
+		return view('admin.exammanage',['papers'=>$paper]);
+	}
+	//create and get paper
+	public function createPaper(){
+		$question = Question::whereIn('status', array('active','deactive'))->get();
+		return view('admin.createpaper',['questions'=>$question]);
+	}
+	//submit create paper
+	public function submitCreatePaper(Request $request){
+			$validator = \Validator::make($request->all(),[
+            'papertype' => 'string|required',
+            'paperbatch' => 'required',
+            'papername' => 'string|required',
+            'timeduration' => 'required',
+        ]);		
+		if ($validator->fails()) {
+			$error = $validator->errors()->all();
+		    return response()->json([
+				'status' => 'error', 
+				'errors' =>$error, 
+				'message' => 'Some validation error!'
+			],200);
+		}else{
+			$questionids = $request->questionids ?? '';
+			$negativevalue = $request->negativevalue;
+			$mocktest_schedule_date = $request->mocktest_schedule_date ?? '';
+			$mocktest_schedule_time = $request->mocktest_schedule_time ?? '';
+			$totalselectqs = $request->totalselectqs ?? '';
+			$createdby = Auth::user()->role;
+			$paper = new Paper;
+			$paper->paper_type = $request->papertype;
+			$paper->batch_id = $request->paperbatch;
+			$paper->question_ids = $request->questionids;
+			$paper->paper_name = $request->papername;
+			$paper->time_duration = $request->timeduration;
+			$paper->negative_marketing_value = $negativevalue;
+			$paper->mocktest_schedule_date = $mocktest_schedule_date;
+			$paper->mocktest_schedule_time = $mocktest_schedule_time;
+			$paper->number_of_question = $totalselectqs;
+			$paper->createdby = $createdby;
+			$paper->save();
+			return response()->json([
+				'status' => 'success',  
+				'message' => 'Paper saved successfully!'
+			], 200);	
+		}
+	}
+	
+	//delete batch 
+	public function deletePaper(Request $request){
+		$paperid = (int)$request->paperid ?? '';
+		$paper = Paper::find($paperid);
+		if ($paper && $paper->delete()) {
+			return response()->json([
+				'status' => 'success',  
+				'message' => 'Paper deleted successfully!'
+			], 200);
+		}else{
+			return response()->json([
+				'status' => 'error', 
+				'message' => 'paper not found!'
+			], 200);
+		}
+	}
+	
+	//change paper status
+	public function changePaperStatus(Request $request){
+		$paperid = (int)$request->paperid ?? '';
+		$paper = Paper::find($paperid);
+		$status = '';
+		if($paper->status == 'active'){
+			$status = 'deactive';	
+		}else{
+			$status = 'active';
+		}
+		$paper->status = $status;
+		$paper->save();
+			return response()->json([
+					'status' => 'success',  
+					'message' => 'status change successfully!'
+			], 200);
+	}
+	public function editPaper($paperid){
+		$paper = Paper::find($paperid);
+		$batch = Batch::whereIn('status', array('active','deactive'))->get();
+		return view('admin.editpaper',['papers'=>$paper,'batches'=>$batch]);
+	}
+
 }
