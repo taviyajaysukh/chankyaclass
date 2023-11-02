@@ -202,14 +202,28 @@ $(function () {
 	
 	$("#questionTable").DataTable({
       "responsive": true, "lengthChange": false, "autoWidth": false,
-      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+      "buttons": ["csv", "excel", "pdf", "print"]
     }).buttons().container().appendTo('#questionTable_wrapper .col-md-6:eq(0)');
 	
+	$("#studentLeaveTable").DataTable();
+	$("#studentDoubtTable").DataTable();
+	$("#studentNoticeTable").DataTable();
 	$("#createPaperTable").DataTable();
+	$("#studentAttendaceTable").DataTable();
 	$("#paperTable").DataTable({
       "responsive": true, "lengthChange": false, "autoWidth": false,
-      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+      "buttons": ["csv", "excel", "pdf", "print"]
     }).buttons().container().appendTo('#paperTable_wrapper .col-md-6:eq(0)');
+	$("#assignmentTable").DataTable({
+      "responsive": true, "lengthChange": false, "autoWidth": false,
+      "buttons": ["csv", "excel", "pdf", "print"]
+    }).buttons().container().appendTo('#assignmentTable_wrapper .col-md-6:eq(0)');
+	$("#applyleaveTable").DataTable({
+      "responsive": true, "lengthChange": false, "autoWidth": false,
+      "buttons": ["csv", "excel", "pdf", "print"]
+    }).buttons().container().appendTo('#applyleaveTable_wrapper .col-md-6:eq(0)');
+	
+	
 	//end datatable
 	//select 2
 	$('.js-example-basic-single').select2();
@@ -692,6 +706,40 @@ $.validator.addMethod("greaterStart", function (value, element, params) {
 	 //add notice
 	
 	$('#addnotice').validate({
+    rules: {
+	  title: {
+        required: true,
+        minlength:1
+      },
+	  notice: {
+        required: true,
+      },
+    },
+    messages: {
+	  title: {
+        required: "Please provide a notice title",
+        minlength: "Your notice title must be at least 5 characters long"
+      }, 
+	notice: {
+        required: "Please select category",
+      },	
+    },
+    errorElement: 'span',
+    errorPlacement: function (error, element) {
+      error.addClass('invalid-feedback');
+      element.closest('.form-group').append(error);
+    },
+    highlight: function (element, errorClass, validClass) {
+      $(element).addClass('is-invalid');
+    },
+    unhighlight: function (element, errorClass, validClass) {
+      $(element).removeClass('is-invalid');
+    }
+  });
+  
+  // add student Notice
+  
+	$('#addstudentnotice').validate({
     rules: {
 	  title: {
         required: true,
@@ -1305,7 +1353,46 @@ $.validator.addMethod("greaterStart", function (value, element, params) {
     }
   });
   
-	//delete upcomming exam record
+	//edit student
+	$('#changestudentpassword').validate({
+    rules: {
+	  studentnewpassword: {
+        required: true,
+      },
+	  studentconfpassword: {
+        required: true,
+		equalTo:"#studentnewpassword"
+      },
+	
+    },
+    messages: {
+	  studentnewpassword: {
+        required: "Please provide a student new password",
+      },
+	  studentconfpassword: {
+        required: "Please provide a valid confirm password",
+	  }, 
+    },
+    errorElement: 'span',
+    errorPlacement: function (error, element) {
+      error.addClass('invalid-feedback');
+      element.closest('.form-group').append(error);
+    },
+    highlight: function (element, errorClass, validClass) {
+      $(element).addClass('is-invalid');
+    },
+    unhighlight: function (element, errorClass, validClass) {
+      $(element).removeClass('is-invalid');
+    }
+  });
+  
+	//change studennt password
+	$('.changebtnpass').click(function(){
+	  let studentid = $(this).data('id');
+	  $("#changepassstudentid").val(studentid);
+	  $('#studentChangepasswordModal').modal('show')
+	})
+	//delete student record
 	$('.deletestudentrecord').click(function(){
 	  let studentid = $(this).data('id')
 	  $('#deletestudentid').val(studentid)
@@ -2194,7 +2281,7 @@ $.validator.addMethod("greaterStart", function (value, element, params) {
             data: {'oldpaperid':oldpaperid,"_token": "{{ csrf_token() }}"},
             success: function(response) {
                 if(response?.status == "success"){
-					toastr.success(response?.message || 'status change successfully...')	
+					toastr.success(response?.message || 'status change successfully...')
 					setTimeout(()=>{
 						window.location = window.location.href
 					},2000)
@@ -2204,7 +2291,6 @@ $.validator.addMethod("greaterStart", function (value, element, params) {
             }            
         });
 	})
-	
 	//gallery manage
 	$(".videosourcediv").css({'display':'none','visibility':'hidden'})
 	$(".youtubevideodiv").css({'display':'none','visibility':'hidden'})
@@ -2769,6 +2855,9 @@ $.validator.addMethod("greaterStart", function (value, element, params) {
         required: true,
         minlength: 3
       },
+	  timezone: {
+        required: true,
+      },
     },
     messages: {
 	  sitetitle: {
@@ -2794,6 +2883,9 @@ $.validator.addMethod("greaterStart", function (value, element, params) {
 	  copyrighttext: {
         required: "Please enter a copyright text",
         minlength: "Your copyright text must be at least 3 characters long"
+      },
+	  timezone: {
+        required: "Please select timezone",
       },
     },
     errorElement: 'span',
@@ -3001,6 +3093,7 @@ $.validator.addMethod("greaterStart", function (value, element, params) {
 	$('#batch_chapter').select2({
 		placeholder: "Select chapter",
 	});
+	
 	$('#batch_teacher').select2({
 		placeholder: "Select teacher",
 		ajax:{ 
@@ -3817,7 +3910,81 @@ $.validator.addMethod("greaterStart", function (value, element, params) {
 			});	
 		}		
 	});
-	
+	//edit paper 
+	$("#editupdatepaper").click(function(){
+		let papertype = $('#papertype').find(":selected").val();
+		let paperbatch = $('#paperbatch').find(":selected").val();
+		let papername = $("#papername").val()
+		let paperid = $("#paperid").val()
+		let timeduration = $("#timeduration").val()
+		let inputnegativevalue = $("#negativevalue").val()
+		let mocktest_schedule_date = $("#mocktest_schedule_date").val()
+		let mocktest_schedule_time = $("#mocktest_schedule_time").val()
+		let totalselectqs = $(".totalselectqs").text()
+		let questionids = []
+		$('input[name=createpapercheck]:checked').each(function(){
+			let qids = $(this).val();
+			questionids.push(qids)
+		})
+		let negativevalue = 0;
+		if(!$('.isnotmaking').is(":checked") && !$('.ismaking').is(":checked")){
+			negativevalue = 0.25;
+		}else if($('.isnotmaking').is(":checked")){
+			negativevalue = 0;
+		}else if(inputnegativevalue !='' && $('.ismaking').is(":checked")){
+			negativevalue = inputnegativevalue
+		}
+		var paperform_data = new FormData();
+		let paperValid = true;
+		if(papertype == ''){
+			toastr.error('Please select paper type');
+			paperValid = false;
+		}else if(papertype == 'mocktestpaper' && mocktest_schedule_date == ''){
+			toastr.error('Please select schedule date');
+			paperValid = false;
+		}else if(papertype == 'mocktestpaper' && mocktest_schedule_time == ''){
+			toastr.error('Please select schedule time');
+			paperValid = false;
+		}else if(papername == ''){
+			toastr.error('Please enter paper name');
+			paperValid = false;
+		}else if(timeduration == ''){
+			toastr.error('Please enter time duration')
+			paperValid = false;
+		}else if(paperbatch == ''){
+			toastr('Please select batch')
+			paperValid = false;
+		}
+		if(paperValid){
+			paperform_data.append("papertype",papertype)
+			paperform_data.append("paperbatch",paperbatch)
+			paperform_data.append("papername",papername)
+			paperform_data.append("mocktest_schedule_date",mocktest_schedule_date)
+			paperform_data.append("mocktest_schedule_time",mocktest_schedule_time)
+			paperform_data.append("timeduration",timeduration)
+			paperform_data.append("paperid",paperid)
+			paperform_data.append("_token", "{{ csrf_token() }}")
+			$.ajax({
+				url: '/admin/updatepaper',
+				type: 'POST',
+				processData: false,
+				cache: false,
+				contentType: false,
+				data: paperform_data,
+				success: function(response) {
+					if(response?.status == "success"){
+						toastr.success(response?.message || 'save successfully...')
+						$('.modal').modal('hide')
+						setTimeout(()=>{
+							window.location = window.location.href
+						},2000)
+					}else{
+						toastr.error(response?.message || 'Record not found!');
+					}
+				}            
+			});	
+		}		
+	});
 	//selectbox change
 	$("#papertype").change(function(){
 		let paperval =  $(this).find(':selected').val();
@@ -3848,6 +4015,368 @@ $.validator.addMethod("greaterStart", function (value, element, params) {
         });
 	})
 	
+	//assignment add process
+	$("#assignbatch").change(function(){
+		var val = $(this).val()
+		$.ajax({
+            url: '/teacher/getbatchsubject',
+            type: 'POST',
+            data: {'batchid':val,"_token": "{{ csrf_token() }}"},
+            success: function(response) {
+				$('#assignsubject').empty()
+                if(response){
+					response.map((ite)=>{
+						$('#assignsubject').append('<option value="' + ite.id + '">' + ite.text + '</option>');
+					})
+				}else{
+					toastr.error(response?.message || 'Record not found!');
+				}
+            }            
+        });
+	})
+	//assignment add process
+	$("#editassignbatch").change(function(){
+		var val = $(this).val()
+		$.ajax({
+            url: '/teacher/getbatchsubject',
+            type: 'POST',
+            data: {'batchid':val,"_token": "{{ csrf_token() }}"},
+            success: function(response) {
+				$('#editassignsubject').empty()
+                if(response){
+					response.map((ite)=>{
+						$('#editassignsubject').append('<option value="' + ite.id + '">' + ite.text + '</option>');
+					})
+				}else{
+					toastr.error(response?.message || 'Record not found!');
+				}
+            }            
+        });
+	})	
+
+	//add assignment
+	$("#addassignment").click(function(){
+		let batch_id = $("#assignbatch").find(':selected').val();
+		let subject_id = $("#assignsubject").find(':selected').val();
+		let assigndate = $("#assigndate").val();
+		let assigndescription = $("#assigndescription").val();
+		let validassign = true;
+		if(batch_id == ''){
+			validassign = false;
+			toastr.error('Please select batch');
+		}else if(subject_id == ''){
+			validassign = false;
+			toastr.error('Please select subject');
+		}else if(assigndate == ''){
+			validassign = false;
+			toastr.error('Please enter valid date');
+		}else if(assigndescription == ''){
+			validassign = false;
+			toastr.error('Please enter description');
+		}
+		
+		if(validassign){
+			let ass_data = new FormData();
+			ass_data.append("batch_id",batch_id)
+			ass_data.append("subject_id",subject_id)
+			ass_data.append("assigndate",assigndate)
+			ass_data.append("assigndescription",assigndescription)
+			ass_data.append("_token", "{{ csrf_token() }}")
+			$.ajax({
+				url: '/teacher/addassignment',
+				type: 'POST',
+				processData: false,
+				cache: false,
+				contentType: false,
+				data: ass_data,
+				success: function(response) {
+					if(response?.status == "success"){
+						toastr.success(response?.message || 'save successfully...')
+						$('.modal').modal('hide')
+						setTimeout(()=>{
+							window.location = window.location.href
+						},2000)
+					}else{
+						toastr.error(response?.message || 'Record not found!');
+					}
+				}            
+			});	
+		}
+	});
+	//update assignment
+	$("#updateassignment").click(function(){
+		let batch_id = $("#editassignbatch").find(':selected').val();
+		let subject_id = $("#editassignsubject").find(':selected').val();
+		let assigndate = $("#editassigndate").val();
+		let assignmentid = $("#assignmentid").val();
+		let assigndescription = $("#editassigndescription").val();
+		let validassign = true;
+		if(batch_id == ''){
+			validassign = false;
+			toastr.error('Please select batch');
+		}else if(subject_id == ''){
+			validassign = false;
+			toastr.error('Please select subject');
+		}else if(assigndate == ''){
+			validassign = false;
+			toastr.error('Please enter valid date');
+		}else if(assigndescription == ''){
+			validassign = false;
+			toastr.error('Please enter description');
+		}
+		
+		if(validassign){
+			let ass_data = new FormData();
+			ass_data.append("assignmentid",assignmentid)
+			ass_data.append("batch_id",batch_id)
+			ass_data.append("subject_id",subject_id)
+			ass_data.append("assigndate",assigndate)
+			ass_data.append("assigndescription",assigndescription)
+			ass_data.append("_token", "{{ csrf_token() }}")
+			$.ajax({
+				url: '/teacher/updateassignment',
+				type: 'POST',
+				processData: false,
+				cache: false,
+				contentType: false,
+				data: ass_data,
+				success: function(response) {
+					if(response?.status == "success"){
+						toastr.success(response?.message || 'save successfully...')
+						$('.modal').modal('hide')
+						setTimeout(()=>{
+							window.location = window.location.href
+						},2000)
+					}else{
+						toastr.error(response?.message || 'Record not found!');
+					}
+				}            
+			});	
+		}
+	});
+	//delete assignment 
+	$('.deleteAssignmentclick').click(function(){
+		let assignmentid = $(this).data('id');
+		$('#deleteassignid').val(assignmentid);
+	});
+	$('#deleteassignmentbtn').click(function(){
+		let assignmentid = $('#deleteassignid').val()
+		$.ajax({
+            url: '/teacher/deleteassignment',
+            type: 'POST',
+            data: {'assignmentid':assignmentid,"_token": "{{ csrf_token() }}"},
+            success: function(response) {
+                if(response?.status == "success"){
+					toastr.success(response?.message || 'delete paper successfully...')	
+					$('.modal').modal('hide')
+					setTimeout(()=>{
+						window.location = window.location.href
+					},2000)
+				}else{
+					toastr.error(response?.message || 'Record not found!');
+				}
+            }            
+        });
+	})
+	//change AssignmentStatus status
+	$('.changeAssignmentStatus').click(function(){
+		let assignmentid = $(this).data('id')
+		$.ajax({
+            url: '/teacher/changeassignmentstatus',
+            type: 'POST',
+            data: {'assignmentid':assignmentid,"_token": "{{ csrf_token() }}"},
+            success: function(response) {
+                if(response?.status == "success"){
+					toastr.success(response?.message || 'status change successfully...')	
+					setTimeout(()=>{
+						window.location = window.location.href
+					},2000)
+				}else{
+					toastr.error(response?.message || 'Record not found!');
+				}
+            }            
+        });
+	})
+	
+	//edit assignment
+	$('.editclickassignment').click(function(){
+		let assignmentid = $(this).data('id');
+		let batch = $(this).data('batch');
+		let subject = $(this).data('subject');
+		let assigndate = $(this).data('assigndate');
+		let assigndescription = $(this).data('assigndescription');
+		
+		$('#assignmentid').val(assignmentid);
+		$('#editassignbatch').val(batch);
+		$('#editassignsubject').val(subject);
+		$('#editassigndate').val(assigndate);
+		$('#editassigndescription').val(assigndescription);
+	});
+	
+	//apply leave
+	$("#applyleave").click(function(){
+		let apf_fdate = $("#applyleave_fromdate").val(); 
+		let apf_tdate = $("#applyleave_todate").val(); 
+		let apf_subject = $("#applyleave_subject").val(); 
+		let apf_message = $("#applyleave_message").val(); 
+		let validcon = true;
+		if(apf_fdate == ''){
+			validcon = false;
+			toastr.error('Please enter from date');
+		}else if(apf_tdate == ''){
+			validcon = false;
+			toastr.error('Please enter to date');
+		}else if(apf_tdate < apf_fdate){
+			validcon = false;
+			toastr.error('To date should be grater than from date');
+		}else if(apf_subject == ''){
+			validcon = false;
+			toastr.error('Please enter subject');
+		}else if(apf_message == ''){
+			validcon = false;
+			toastr.error('Please enter message');
+		}
+		if(validcon){
+			let ass_data = new FormData();
+			ass_data.append("apf_fdate",apf_fdate)
+			ass_data.append("apf_tdate",apf_tdate)
+			ass_data.append("apf_subject",apf_subject)
+			ass_data.append("apf_message",apf_message)
+			ass_data.append("_token", "{{ csrf_token() }}")
+			$.ajax({
+				url: '/teacher/submitapplyleave',
+				type: 'POST',
+				processData: false,
+				cache: false,
+				contentType: false,
+				data: ass_data,
+				success: function(response) {
+					if(response?.status == "success"){
+						toastr.success(response?.message || 'save successfully...')
+						$('.modal').modal('hide')
+						setTimeout(()=>{
+							window.location = window.location.href
+						},2000)
+					}else{
+						toastr.error(response?.message || 'Record not found!');
+					}
+				}            
+			});
+		}
+	});
+	
+	//edit apply leave procrss
+	
+	$(".editclickapplyleave").click(function(){
+		let applyid = $(this).data('id');
+		let fromdate = $(this).data('fromdate');
+		let todate = $(this).data('todate');
+		let subject = $(this).data('subject');
+		let message = $(this).data('message');
+		
+		$("#applyid").val(applyid);
+		$("#editapplyleave_fromdate").val(fromdate);
+		$("#editapplyleave_todate").val(todate);
+		$("#editapplyleave_subject").val(subject);
+		$("#editapplyleave_message").val(message);
+	});
+	//update apply leave
+	$("#editapplyleave").click(function(){
+		let apf_fdate = $("#editapplyleave_fromdate").val(); 
+		let apf_tdate = $("#editapplyleave_todate").val(); 
+		let apf_subject = $("#editapplyleave_subject").val(); 
+		let apf_message = $("#editapplyleave_message").val(); 
+		let applyid = $("#applyid").val(); 
+		let validcon = true;
+		if(apf_fdate == ''){
+			validcon = false;
+			toastr.error('Please enter from date');
+		}else if(apf_tdate == ''){
+			validcon = false;
+			toastr.error('Please enter to date');
+		}else if(apf_tdate < apf_fdate){
+			validcon = false;
+			toastr.error('To date should be grater than from date');
+		}else if(apf_subject == ''){
+			validcon = false;
+			toastr.error('Please enter subject');
+		}else if(apf_message == ''){
+			validcon = false;
+			toastr.error('Please enter message');
+		}
+		if(validcon){
+			let ass_data = new FormData();
+			ass_data.append("applyid",applyid)
+			ass_data.append("apf_fdate",apf_fdate)
+			ass_data.append("apf_tdate",apf_tdate)
+			ass_data.append("apf_subject",apf_subject)
+			ass_data.append("apf_message",apf_message)
+			ass_data.append("_token", "{{ csrf_token() }}")
+			$.ajax({
+				url: '/teacher/updateapplyleave',
+				type: 'POST',
+				processData: false,
+				cache: false,
+				contentType: false,
+				data: ass_data,
+				success: function(response) {
+					if(response?.status == "success"){
+						toastr.success(response?.message || 'save successfully...')
+						$('.modal').modal('hide')
+						setTimeout(()=>{
+							window.location = window.location.href
+						},2000)
+					}else{
+						toastr.error(response?.message || 'Record not found!');
+					}
+				}            
+			});
+		}
+	});
+	
+	//delete assignment 
+	$('.deleteApplyleaveclick').click(function(){
+		let applyid = $(this).data('id');
+		$('#deleteapplyid').val(applyid);
+	});
+	$('#deleteapplyleavebtn').click(function(){
+		let applyid = $('#deleteapplyid').val()
+		$.ajax({
+            url: '/teacher/deleteapplyleave',
+            type: 'POST',
+            data: {'applyid':applyid,"_token": "{{ csrf_token() }}"},
+            success: function(response) {
+                if(response?.status == "success"){
+					toastr.success(response?.message || 'delete apply successfully...')	
+					$('.modal').modal('hide')
+					setTimeout(()=>{
+						window.location = window.location.href
+					},2000)
+				}else{
+					toastr.error(response?.message || 'Record not found!');
+				}
+            }            
+        });
+	})
+	//change leave apply Status status
+	$('.changeApplyleaveStatus').click(function(){
+		let applyid = $(this).data('id')
+		$.ajax({
+            url: '/teacher/changeapplyleavestatus',
+            type: 'POST',
+            data: {'applyid':applyid,"_token": "{{ csrf_token() }}"},
+            success: function(response) {
+                if(response?.status == "success"){
+					toastr.success(response?.message || 'status change successfully...')	
+					setTimeout(()=>{
+						window.location = window.location.href
+					},2000)
+				}else{
+					toastr.error(response?.message || 'Record not found!');
+				}
+            }            
+        });
+	})
 });
 function getpaperid(paperid,status){
 	if(status == 'delete'){

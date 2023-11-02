@@ -106,6 +106,19 @@
 							<input type="text" name="copyrighttext" id="copyrighttext" class="form-control" value="{{@$sitesettings->copyrighttext}}" placeholder="Enter Copyright Text">
 						 </div>
 					</div>
+					<div class="col-md-12">
+						<div class="form-group">
+							<label for="name">Time Zone</label>
+							<select class="form-control" id="timezone" name="timezone">
+							  <option value="">Select timezone</option>
+								  @if($timezones)
+									@foreach($timezones as $timezone)
+								  <option value="{{@$timezone->timezone}}" {{ $timezone->timezone == $sitesettings->timezone ? 'selected' : '' }}>{{@$timezone->timezone}}</option>
+								  @endforeach
+								@endif
+							</select>
+						  </div>
+					</div>
 					<div class="col-md-2">
 						<button type="submit" class="btn btn-success btn-block">Save</button>
 					</div>

@@ -9,6 +9,7 @@
 	@endphp
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+		@if(Auth::user()->role == 'admin'))
           <li class="nav-item {{ Request::is('admin/dashboard') ? 'menu-is-opening menu-open' : '' }}">
             <a href="{{ url('/admin/dashboard') }}" class="nav-link">
               <i class="nav-icon fas fa-th"></i>
@@ -281,6 +282,33 @@
               </p>
             </a>
 			</li>
+			@endif
+			@if(Auth::user()->role == 'teacher')
+				<li class="nav-item {{ Request::is('teacher/dashboard') ? 'menu-is-opening menu-open' : '' }}">
+					<a href="{{ url('/teacher/dashboard') }}" class="nav-link">
+					  <i class="nav-icon fas fa-th"></i>
+					  <p>
+					  {{ __('label.dashboard') }}
+					  </p>
+					</a>
+				  </li>
+				  <li class="nav-item {{ Request::is('teacher/assignmentmanage') ? 'menu-is-opening menu-open' : '' }}">
+					<a href="{{ url('/teacher/assignmentmanage') }}" class="nav-link">
+					  <i class="nav-icon fas fa-th"></i>
+					  <p>
+					  Manage Assignment
+					  </p>
+					</a>
+				  </li>
+				  <li class="nav-item {{ Request::is('teacher/applyleave') ? 'menu-is-opening menu-open' : '' }}">
+					<a href="{{ url('/teacher/applyleave') }}" class="nav-link">
+					  <i class="nav-icon fas fa-th"></i>
+					  <p>
+						Apply Leave
+					  </p>
+					</a>
+				  </li>
+			@endif
         </ul>
       </nav>
       <!-- /.sidebar-menu -->

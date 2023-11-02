@@ -44,10 +44,27 @@ class AdminController extends Controller
 				'message' => 'Currency list'
 			], 200);
 	}
+	//get currency
+	public function getTimezone(){
+		$timezone = DB::select('select * from timezone');
+		return response()->json([
+				'status' => 'success',
+				'timezone' => $timezone,				
+				'message' => 'Currency list'
+			], 200);
+	}
     //admin dashboard
 	public function dashboard()
-    {
-        return view('admin.dashboard');
+    {	
+		$student = Student::whereIn('status', array('deactive','active'))->get();
+		$batch = Batch::whereIn('status', array('deactive','active'))->get();
+		$question = Question::whereIn('status', array('deactive','active'))->get();
+		$notice = Notice::whereIn('status', array('deactive','active'))->get();
+		$total_student = $student->count();
+		$total_batch = $batch->count();
+		$total_question = $question->count();
+		$total_notice = $notice->count();
+        return view('admin.dashboard',['total_studens'=>$total_student,'total_batchs'=>$total_batch,'total_questions'=>$total_question,'total_notices'=>$total_notice]);
     }
 	//user maange
 	public function userManage()
@@ -880,6 +897,75 @@ class AdminController extends Controller
 		$student = Student::whereIn('status', array('active','deactive'))->get();
         return view('admin.studentmanage',['students'=>$student]);
     }
+	// student attendance
+	
+	//manage student
+	public function studentAttendance($studentid)
+    {
+		$student = Student::where('id',$studentid)->get();
+        return view('admin.studentattendance',['students'=>$student]);
+    }
+	//studentManageCertificate
+	public function studentManageCertificate($studentid)
+    {
+		$student = Student::where('id',$studentid)->get();
+        return view('admin.studentmanagecertificate',['students'=>$student]);
+    }
+	//extraClassAttendance
+	public function extraClassAttendance($studentid)
+    {
+		$student = Student::where('id',$studentid)->get();
+        return view('admin.extraclassattendance',['students'=>$student]);
+    }
+	//student Progress
+	public function studentProgress($studentid)
+    {
+		$student = Student::where('id',$studentid)->get();
+        return view('admin.studentprogress',['students'=>$student]);
+    }
+	//student Notice
+	public function studentNotice($studentid)
+    {
+		$notice = Notice::whereIn('noticefor', array('student'))->get();
+		$student = Student::where('id',$studentid)->get();
+        return view('admin.studentnotice',['students'=>$student,'notices'=>$notice]);
+    }
+	//student Student Task
+	public function studentDoubtask($studentid)
+    {
+		$student = Student::where('id',$studentid)->get();
+        return view('admin.studentdoubtask',['students'=>$student]);
+    }
+	//submit change student password
+	public function submitStudentPassword(Request $request){
+		$validator = \Validator::make($request->all(),[
+            'studentnewpassword' => 'string|required|required_with:studentconfpassword|same:studentconfpassword',
+            'studentconfpassword' => 'string|required'
+        ]);
+		if ($validator->fails()) {
+			$error = $validator->errors()->all();
+		    return response()->json([
+				'status' => 'error', 
+				'errors' =>$error, 
+				'message' => 'Some validation error!'
+			],200);
+		}else{
+			$studentid = $request->changepassstudentid ?? '';
+			$student = Student::find($studentid);
+			$student->password = Hash::make($request->studentnewpassword);
+			$student->save();
+			return response()->json([
+				'status' => 'success', 
+				'data' =>[], 
+				'message' => 'Student new password saved successfully!'
+			], 200);	
+		}
+	}
+	//manageStudentLeave
+	public function manageStudentLeave(){
+		$student = Student::whereIn('status',array('active','deactive'))->get();
+        return view('admin.managestudentleave',['students'=>$student]);
+	}
 	//get student form
 	public function addStudent()
     {
@@ -1877,8 +1963,10 @@ class AdminController extends Controller
 	//site settings
 	public function siteSettings()
     {
+		
 		$sitesetting = Sitesettings::whereIn('status', array('active','deactive'))->first();
-        return view('admin.sitesettings',['sitesettings'=>$sitesetting]);
+		$timzezone = DB::select('select * from timezone');
+        return view('admin.sitesettings',['sitesettings'=>$sitesetting,'timezones'=>$timzezone]);
     }
 	
 	//update Site setting
@@ -1890,6 +1978,7 @@ class AdminController extends Controller
             'sitedescription' => 'string|required|min:3',
             'enrollmentword' => 'string|required|min:3',
             'copyrighttext' => 'string|required|min:3',
+            'timezone' => 'string|required',
             
         ]);
 		$feviconName = '';
@@ -1948,6 +2037,7 @@ class AdminController extends Controller
 			$sitesetting->sitedescription = $request->sitedescription;
 			$sitesetting->enrollmentword = $request->enrollmentword;
 			$sitesetting->copyrighttext = $request->copyrighttext;
+			$sitesetting->timezone = $request->timezone;
 			$sitesetting->createdby = $createdby;
 			$sitesetting->save();
 			return response()->json([
@@ -2478,5 +2568,37 @@ class AdminController extends Controller
 		$batch = Batch::whereIn('status', array('active','deactive'))->get();
 		return view('admin.editpaper',['papers'=>$paper,'batches'=>$batch]);
 	}
-
+	//update create paper
+	public function updatePaper(Request $request){
+			$validator = \Validator::make($request->all(),[
+            'papertype' => 'string|required',
+            'paperbatch' => 'required',
+            'papername' => 'string|required',
+            'timeduration' => 'required',
+        ]);		
+		if ($validator->fails()) {
+			$error = $validator->errors()->all();
+		    return response()->json([
+				'status' => 'error', 
+				'errors' =>$error, 
+				'message' => 'Some validation error!'
+			],200);
+		}else{
+			$paperid = $request->paperid ?? '';
+			$mocktest_schedule_date = $request->mocktest_schedule_date ?? '';
+			$mocktest_schedule_time = $request->mocktest_schedule_time ?? '';
+			$paper = Paper::find($paperid);
+			$paper->paper_type = $request->papertype;
+			$paper->batch_id = $request->paperbatch;
+			$paper->paper_name = $request->papername;
+			$paper->time_duration = $request->timeduration;
+			$paper->mocktest_schedule_date = $mocktest_schedule_date;
+			$paper->mocktest_schedule_time = $mocktest_schedule_time;
+			$paper->save();
+			return response()->json([
+				'status' => 'success',  
+				'message' => 'Paper saved successfully!'
+			], 200);	
+		}
+	}
 }

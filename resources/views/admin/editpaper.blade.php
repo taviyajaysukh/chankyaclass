@@ -30,6 +30,7 @@
               <div class="card-body">
 					<div class="row">
 						<div class="col-md-12">
+							<input type="hidden" name="paperid" id="paperid" value="{{$papers->id}}">
 							<div class="form-group">
 							<h3>EDIT MANAGE PAPER</h3>
 							<div class="btn-group btn-group-toggle" data-toggle="buttons">
@@ -94,8 +95,17 @@
 									</select>
 								 </div>
 							</div>
+							<div class="col-md-12">
+								Add Question<input type="checkbox" class="addpaperquestion"> Create New Question<input type="checkbox" class="cratenewquestion">
+							</div>
+							<div class="col-md-12 oldquestion">
+								<div class="form-group">
+									<label>Old Question</label>
+									<input type="text" name="papername" id="papername" class="form-control" placeholder="Paper name" value="{{@$papers->paper_name}}">
+								 </div>
+							</div>
 							<div class="col-md-2">
-								<button type="button" id="createpaper" class="btn btn-success btn-block">Save</button>
+								<button type="button" id="editupdatepaper" class="btn btn-success btn-block">Save</button>
 							</div>
 						</div>
 					</div>

@@ -397,6 +397,84 @@
 	  </div>
 	</div>
 </div>	  
+
+
+<!-- Student change password modal -->	  
+<div class="modal fade" id="studentChangepasswordModal">
+	<div class="modal-dialog modal-lg">
+	  <div class="modal-content">
+		<div class="modal-header">
+		  <h4 class="modal-title">Change Password</h4>
+		  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		  </button>
+		</div>
+		<div class="modal-body">
+			<form action="submitstudentpassword" id="changestudentpassword" method="POST" enctype="multipart/form-data">
+				@csrf
+				<div class="row">
+					<div class="col-md-12">
+						<input type="hidden" id="changepassstudentid" name="changepassstudentid">
+						<div class="form-group">
+							<input type="password" name="studentnewpassword" id="studentnewpassword" class="form-control" placeholder="Enter new password">
+						  </div>
+					</div>
+					<div class="col-md-12">
+						<div class="form-group">
+							<input type="password" name="studentconfpassword" id="studentconfpassword" class="form-control" placeholder="Enter confirm password">
+						  </div>
+					</div>
+					<div class="col-md-2">
+						<button type="submit" class="btn btn-success btn-block">Save</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	  </div>
+	</div>
+</div>
+
+<!-- Add notice modal -->	  
+<div class="modal fade" id="addStudentNoticeModal">
+	<div class="modal-dialog modal-lg">
+	  <div class="modal-content">
+		<div class="modal-header">
+		  <h4 class="modal-title">Add notice</h4>
+		  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		  </button>
+		</div>
+		<div class="modal-body">
+			<form action="addnotice" id="addstudentnotice" method="POST" enctype="multipart/form-data">
+				@csrf
+				<div class="row">
+					<div class="col-md-12">
+						<div class="form-group">
+							<input type="text" name="title" id="studenttitle" class="form-control" placeholder="Enter Title">
+						  </div>
+					</div>
+					<div class="col-md-12">
+						<div class="form-group">
+							<select name="noticefor" id="studentnoticefor" class="form-control">
+								<option value="student" selected="true">Student</option>
+							</select>
+						  </div>
+					</div>
+					<div class="col-md-12">
+						<div class="form-group">
+							<textarea name="notice" id="studentnotice" class="form-control" placeholder="Description"></textarea>
+						  </div>
+					</div>
+					<div class="col-md-2">
+						<button type="submit" class="btn btn-success btn-block">Save</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	  </div>
+	</div>
+</div>
+
 <!-- edit notice modal -->	  
 <div class="modal fade" id="editNoticeModal">
 	<div class="modal-dialog modal-lg">
@@ -2211,6 +2289,264 @@
 		<div class="modal-footer justify-content-between">
 		  <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
 		  <button type="button" id="deletepaperbtn" class="btn btn-danger">Delete</button>
+		</div>
+	  </div>
+	</div>
+ </div>
+ 
+ 
+<!-- Teacher user modal design --> 
+<!-- Teacher add assignment model --> 
+
+<div class="modal fade" id="addAssignmentModal">
+	<div class="modal-dialog modal-lg">
+	  <div class="modal-content">
+		<div class="modal-header">
+		  <h4 class="modal-title">Add assignment</h4>
+		  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		  </button>
+		</div>
+		<div class="modal-body">
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>Batch</label>
+							<select class="form-control paperbath" id="assignbatch" name="assignbatch">
+							<option value="">Please select batch</option>
+							  @if($batches)
+								@foreach($batches as $batch)
+							  <option value="{{@$batch->id}}">{{@$batch->batch_name}}</option>
+							  @endforeach
+							@endif
+							</select>
+						 </div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>Subject</label>
+							<select class="form-control assignsubject" id="assignsubject" name="assignsubject">
+							<option value="">Please select subject</option>
+							</select>
+						 </div>
+					</div>
+					<div class="col-md-12">
+						<div class="form-group">
+							<label>Date</label>
+							<input type="Date" name="assigndate" id="assigndate" class="form-control assigndate" placeholder="Date">
+						 </div>
+					</div>
+					<div class="col-md-12">
+						<div class="form-group">
+							<label>Description</label>
+							<textarea class="form-control assigndescription" id="assigndescription" name="assigndescription" placeholder="description"></textarea>
+						 </div>
+					</div>
+					<div class="col-md-2">
+						<button type="button" id="addassignment" class="btn btn-success btn-block">Save</button>
+					</div>
+				</div>
+		</div>
+	  </div>
+	</div>
+</div>
+
+<!-- Teacher modal for assignment delete -->
+<div class="modal fade" id="deleteAssignmentModal">
+	<div class="modal-dialog">
+	  <div class="modal-content">
+	  <input type="hidden" name="deleteassignid" id="deleteassignid">
+		<div class="modal-header">
+		  <h4 class="modal-title">Confirmation</h4>
+		  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		  </button>
+		</div>
+		<div class="modal-body">
+		  <p>Are you sure delete this record?</p>
+		</div>
+		<div class="modal-footer justify-content-between">
+		  <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+		  <button type="button" id="deleteassignmentbtn" class="btn btn-danger">Delete</button>
+		</div>
+	  </div>
+	</div>
+ </div>
+ 
+ 
+<!-- Teacher edit assignment model --> 
+
+<div class="modal fade" id="editAssignmentModal">
+	<div class="modal-dialog modal-lg">
+	  <div class="modal-content">
+		<div class="modal-header">
+		  <h4 class="modal-title">Edit assignment</h4>
+		  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		  </button>
+		</div>
+		<div class="modal-body">
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>Batch</label>
+							<select class="form-control" id="editassignbatch" name="editassignbatch">
+							<option value="">Please select batch</option>
+							  @if($batches)
+								@foreach($batches as $batch)
+							  <option value="{{@$batch->id}}">{{@$batch->batch_name}}</option>
+							  @endforeach
+							@endif
+							</select>
+						 </div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>Subject</label>
+							<select class="form-control assignsubject" id="editassignsubject" name="editassignsubject">
+							<option value="">Please select subject</option>
+							@if($subjects)
+								@foreach($subjects as $subject)
+							  <option value="{{@$subject->id}}">{{@$subject->subjectname}}</option>
+							  @endforeach
+							@endif
+							</select>
+						 </div>
+					</div>
+					<div class="col-md-12">
+						<div class="form-group">
+							<label>Date</label>
+							<input type="Date" name="editassigndate" id="editassigndate" class="form-control assigndate" placeholder="Date">
+						 </div>
+					</div>
+					<div class="col-md-12">
+						<div class="form-group">
+							<label>Description</label>
+							<textarea class="form-control editassigndescription" id="editassigndescription" name="editassigndescription" placeholder="description"></textarea>
+						 </div>
+					</div>
+					<input type="hidden" id="assignmentid">
+					<div class="col-md-2">
+						<button type="button" id="updateassignment" class="btn btn-success btn-block">Save</button>
+					</div>
+				</div>
+		</div>
+	  </div>
+	</div>
+</div> 
+
+<!-- Apply leave  model --> 
+
+<div class="modal fade" id="applyLeaveModal">
+	<div class="modal-dialog modal-lg">
+	  <div class="modal-content">
+		<div class="modal-header">
+		  <h4 class="modal-title">Apply Leave</h4>
+		  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		  </button>
+		</div>
+		<div class="modal-body">
+				<div class="row">
+					
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>From Date</label>
+							<input type="Date" name="applyleave_fromdate" id="applyleave_fromdate" class="form-control applyleave_fromdate" placeholder="From Date">
+						 </div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>To Date</label>
+							<input type="Date" name="applyleave_todate" id="applyleave_todate" class="form-control applyleave_todate" placeholder="To Date">
+						 </div>
+					</div>
+					<div class="col-md-12">
+						<div class="form-group">
+							<label>Subject</label>
+							<input type="text" name="applyleave_subject" id="applyleave_subject" class="form-control applyleave_subject" placeholder="Subject">
+						 </div>
+					</div>
+					<div class="col-md-12">
+						<div class="form-group">
+							<label>Message</label>
+							<textarea class="form-control applyleave_message" id="applyleave_message" name="applyleave_message" placeholder="Message"></textarea>
+						 </div>
+					</div>
+					<div class="col-md-2">
+						<button type="button" id="applyleave" class="btn btn-success btn-block">Apply Leave</button>
+					</div>
+				</div>
+		</div>
+	  </div>
+	</div>
+</div>
+
+
+<!-- Edit Apply leave  model --> 
+
+<div class="modal fade" id="editApplyleaveModal">
+	<div class="modal-dialog modal-lg">
+	  <div class="modal-content">
+		<div class="modal-header">
+		  <h4 class="modal-title">Apply Leave</h4>
+		  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		  </button>
+		</div>
+		<div class="modal-body">
+				<div class="row">
+					<input type="hidden" id="applyid">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>From Date</label>
+							<input type="Date" name="editapplyleave_fromdate" id="editapplyleave_fromdate" class="form-control editapplyleave_fromdate" placeholder="From Date">
+						 </div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>To Date</label>
+							<input type="Date" name="editapplyleave_todate" id="editapplyleave_todate" class="form-control editapplyleave_todate" placeholder="To Date">
+						 </div>
+					</div>
+					<div class="col-md-12">
+						<div class="form-group">
+							<label>Subject</label>
+							<input type="text" name="editapplyleave_subject" id="editapplyleave_subject" class="form-control editapplyleave_subject" placeholder="Subject">
+						 </div>
+					</div>
+					<div class="col-md-12">
+						<div class="form-group">
+							<label>Message</label>
+							<textarea class="form-control editapplyleave_message" id="editapplyleave_message" name="editapplyleave_message" placeholder="Message"></textarea>
+						 </div>
+					</div>
+					<div class="col-md-2">
+						<button type="button" id="editapplyleave" class="btn btn-success btn-block">Apply Leave</button>
+					</div>
+				</div>
+		</div>
+	  </div>
+	</div>
+</div>
+
+<!-- Teacher modal for apply leave delete -->
+<div class="modal fade" id="deleteApplyleaveModal">
+	<div class="modal-dialog">
+	  <div class="modal-content">
+	  <input type="hidden" name="deleteapplyid" id="deleteapplyid">
+		<div class="modal-header">
+		  <h4 class="modal-title">Confirmation</h4>
+		  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		  </button>
+		</div>
+		<div class="modal-body">
+		  <p>Are you sure delete this record?</p>
+		</div>
+		<div class="modal-footer justify-content-between">
+		  <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+		  <button type="button" id="deleteapplyleavebtn" class="btn btn-danger">Delete</button>
 		</div>
 	  </div>
 	</div>

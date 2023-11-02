@@ -69,7 +69,31 @@
 											</button>
 											<div class="dropdown-menu custom-table-dropdown" role="menu">
 											  <div class="dropdown-divider"></div>
-												<a class="dropdown-item" href="#">
+												<a class="dropdown-item" href="studentattendance/{{$student->id}}">
+													Attendance
+												</a>
+												<a class="dropdown-item" href="studentmanagecertificate/{{$student->id}}">
+													Manage Certificate
+												</a>
+												<a class="dropdown-item" href="extraclassattendance/{{$student->id}}">
+													Extra Class Attendance
+												</a>
+												<a class="dropdown-item" href="studentprogress/{{$student->id}}">
+													Progress
+												</a>
+												<a class="dropdown-item" href="studentacadmicrecord/{{$student->id}}">
+													Academic Record
+												</a>
+												<a class="dropdown-item" href="studentnotice/{{$student->id}}">
+													Notice
+												</a>
+												<a class="dropdown-item" href="studentdoubtask/{{$student->id}}">
+													Doubts Ask
+												</a>
+												<a class="dropdown-item changebtnpass" href="javascript:void(0)" data-id="{{$student->id}}" >
+													Change Password
+												</a>
+												<a class="dropdown-item" href="editstudent/{{$student->id}}">
 													Edit
 												</a>
 												<a class="dropdown-item deletestudentrecord" data-id="{{ $student->id }}" href="javascript:void(0)">

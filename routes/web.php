@@ -22,6 +22,7 @@ Route::get('/login',function(){
 });
 Route::get('/',[AuthController::class,'loadLogin']);
 Route::get('/getcurrency',[AdminController::class,'getCurrency']);
+Route::get('/gettimezone',[AdminController::class,'getTimezone']);
 Route::post('/login',[AuthController::class,'login'])->name('login');
 Route::get('/forgotpassword',[AuthController::class,'loadForgotpassword']);
 Route::post('/forgotpassword',[AuthController::class,'forgotpassword'])->name('forgotpassword');
@@ -89,12 +90,23 @@ Route::group(['prefix' => 'admin','middleware'=>['web','isAdmin']],function(){
 	
 	//student manage
 	Route::get('/studentmanage',[AdminController::class,'studentManage']);
+	Route::get('/managestudentleave',[AdminController::class,'manageStudentLeave']);
 	Route::get('/editstudent/{studentid}',[AdminController::class,'editStudent']);
 	Route::get('/addstudent',[AdminController::class,'addStudent']);
 	Route::post('/submitstudent',[AdminController::class,'submitStudent'])->name('submitstudent');
 	Route::post('/updatestudent',[AdminController::class,'updateStudent'])->name('updatestudent');
 	Route::post('/deletestudent',[AdminController::class,'deleteStudent'])->name('deletestudent');
 	Route::post('/changestudentstatus',[AdminController::class,'changeStudentstatus'])->name('changestudentstatus');
+	
+	//student action page
+	Route::get('/studentattendance/{id}',[AdminController::class,'studentAttendance']);
+	Route::get('/studentmanagecertificate/{id}',[AdminController::class,'studentManageCertificate']);
+	Route::get('/extraclassattendance/{id}',[AdminController::class,'extraClassAttendance']);
+	Route::get('/studentprogress/{id}',[AdminController::class,'studentProgress']);
+	Route::get('/studentacademicrecord/{id}',[AdminController::class,'studentAcademicRecord']);
+	Route::get('/studentnotice/{id}',[AdminController::class,'studentNotice']);
+	Route::get('/studentdoubtask/{id}',[AdminController::class,'studentDoubtask']);
+	Route::post('/submitstudentpassword',[AdminController::class,'submitStudentPassword']);
 	
 	//extra classes manage
 	Route::get('/extraclassesmanage',[AdminController::class,'extraClassesManage']);
@@ -185,9 +197,24 @@ Route::group(['prefix' => 'admin','middleware'=>['web','isAdmin']],function(){
 	Route::get('/exammanage',[AdminController::class,'examManage']);
 	Route::get('/createpaper',[AdminController::class,'createPaper']);
 	Route::post('/submitcreatepaper',[AdminController::class,'submitCreatePaper'])->name('submitcreatepaper');
+	Route::post('/updatepaper',[AdminController::class,'updatePaper'])->name('updatepaper');
 	Route::post('/deletepaper',[AdminController::class,'deletePaper'])->name('deletepaper');
 	Route::post('/changepaperstatus',[AdminController::class,'changePaperStatus'])->name('changePaperstatus');
 });
 Route::group(['prefix' => 'teacher','middleware'=>['web','isTeacher']],function(){
     Route::get('/dashboard',[TeacherController::class,'dashboard']);
+	//assignment route
+	Route::get('/assignmentmanage',[TeacherController::class,'assignmentManage']);
+	Route::post('/getbatchsubject',[TeacherController::class,'getBatchSubject'])->name('getbatchsubject');
+	Route::post('/addassignment',[TeacherController::class,'addAssignment'])->name('addassignment');
+	Route::post('/updateassignment',[TeacherController::class,'updateAssignment'])->name('updateassignment');
+	Route::post('/deleteassignment',[TeacherController::class,'deleteAssignment'])->name('deleteassignment');
+	Route::post('/changeassignmentstatus',[TeacherController::class,'changeAssignmentstatus'])->name('changeassignmentstatus');
+	
+	//apply leave route
+	Route::get('/applyleave',[TeacherController::class,'applyLeave']);
+	Route::post('/submitapplyleave',[TeacherController::class,'submitApplyLeave'])->name('submitapplyleave');
+	Route::post('/updateapplyleave',[TeacherController::class,'updateApplyleave'])->name('updateapplyleave');
+	Route::post('/deleteapplyleave',[TeacherController::class,'deleteApplyleave'])->name('deleteapplyleave');
+	Route::post('/changeapplyleavestatus',[TeacherController::class,'changeApplyleaveStatus'])->name('changeapplyleavestatus');
 });

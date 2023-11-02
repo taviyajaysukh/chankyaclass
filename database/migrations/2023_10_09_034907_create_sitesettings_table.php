@@ -25,6 +25,7 @@ return new class extends Migration
 			$table->text('sitedescription');
 			$table->text('enrollmentword');
 			$table->text('copyrighttext');
+			$table->string('timezone');
 			$table->string('createdby');
 			$table->enum('status', ['active', 'deactive'])->default('active');
             $table->timestamps();
