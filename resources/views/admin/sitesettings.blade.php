@@ -119,6 +119,26 @@
 							</select>
 						  </div>
 					</div>
+					<div class="col-md-12">
+						<div class="form-group">
+							<label for="contactnumber">Pravacy Policy</label>
+							<textarea name="privacypolicy" id="privacypolicy" class="form-control" value="{{@$sitesettings->privacypolicy}}">{{@$sitesettings->privacypolicy}}						</textarea>
+						  </div>
+					</div>
+					<div class="col-md-12">
+						<div class="form-group">
+							<label for="contactnumber">About App</label>
+							<textarea name="aboutapp" id="aboutapp" class="form-control" value="{{@$sitesettings->aboutapp}}">{{@$sitesettings->aboutapp}}
+							</textarea>
+						  </div>
+					</div>
+					<div class="col-md-12">
+						<div class="form-group">
+							<label for="contactnumber">Open source library</label>
+							<textarea name="opensourcelibrary" id="opensourcelibrary" class="form-control" value="{{@$sitesettings->opensourcelibrary}}">{{@$sitesettings->opensourcelibrary}}
+							</textarea>
+						  </div>
+					</div>
 					<div class="col-md-2">
 						<button type="submit" class="btn btn-success btn-block">Save</button>
 					</div>

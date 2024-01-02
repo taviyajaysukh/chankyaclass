@@ -81,7 +81,7 @@
 												<a class="dropdown-item" href="studentprogress/{{$student->id}}">
 													Progress
 												</a>
-												<a class="dropdown-item" href="studentacadmicrecord/{{$student->id}}">
+												<a class="dropdown-item" href="studentacademicrecord/{{$student->id}}">
 													Academic Record
 												</a>
 												<a class="dropdown-item" href="studentnotice/{{$student->id}}">

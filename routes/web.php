@@ -14,7 +14,7 @@ use App\Http\Controllers\TeacherController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+//ACAD12254
 Route::get('/register',[AuthController::class,'loadRegister']);
 Route::post('/register',[AuthController::class,'register'])->name('register');
 Route::get('/login',function(){
@@ -91,6 +91,7 @@ Route::group(['prefix' => 'admin','middleware'=>['web','isAdmin']],function(){
 	//student manage
 	Route::get('/studentmanage',[AdminController::class,'studentManage']);
 	Route::get('/managestudentleave',[AdminController::class,'manageStudentLeave']);
+	Route::get('/studentpaymenthistory',[AdminController::class,'studentPaymentHistory']);
 	Route::get('/editstudent/{studentid}',[AdminController::class,'editStudent']);
 	Route::get('/addstudent',[AdminController::class,'addStudent']);
 	Route::post('/submitstudent',[AdminController::class,'submitStudent'])->name('submitstudent');
@@ -125,6 +126,14 @@ Route::group(['prefix' => 'admin','middleware'=>['web','isAdmin']],function(){
 	Route::post('/deleteteacher',[AdminController::class,'deleteTeacher'])->name('deleteteacher');
 	Route::post('/changeteacherstatus',[AdminController::class,'changeTeacherStatus'])->name('changeteacherstatus');
 	Route::get('/getteacher',[AdminController::class,'getTeacher'])->name('getteacher');
+	
+	Route::get('/manageteacherleave',[AdminController::class,'manageTeacherLeave']);
+	//manage doubts class
+	Route::get('/doubtsclass',[AdminController::class,'doubtsClass']);
+	Route::get('/enquiry',[AdminController::class,'Enquiry']);
+	Route::get('/practiceresult',[AdminController::class,'practiceResult']);
+	Route::get('/mocktestresult',[AdminController::class,'mockTestResult']);
+	Route::get('/viewcertificatesample',[AdminController::class,'viewCertificateSample']);
 	//book manage
 	Route::get('/bookmanage',[AdminController::class,'bookManage']);
 	Route::post('/addbook',[AdminController::class,'addBook'])->name('addbook');

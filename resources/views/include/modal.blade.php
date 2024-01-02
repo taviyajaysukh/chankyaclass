@@ -2551,3 +2551,51 @@
 	  </div>
 	</div>
  </div>
+ 
+ 
+ <!-- Admin modal for student view -->
+<div class="modal fade" id="viewLeaveModal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Student Leave Application</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+				<div class="row">
+					<div class="col-md-3">
+						Subject:
+					</div>
+					<div class="col-md-9">
+						<p class="subject-leave"></p>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-3">
+						Message:
+					</div>
+					<div class="col-md-9">
+						<p class="message-leave"></p>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-3">
+						Leave Date:
+					</div>
+					<div class="col-md-9">
+						<span class="fromdate-leave"></span> To 
+						<span class="todate-leave"></span>
+					</div>
+				</div>
+            </div>
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+      </div>
+      <!-- /.modal -->

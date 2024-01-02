@@ -28,6 +28,7 @@ use App\Models\Batchsubject;
 use App\Models\Question;
 use App\Models\Exam;
 use App\Models\Paper;
+use App\Models\Applyleave;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -926,9 +927,14 @@ class AdminController extends Controller
 	//student Notice
 	public function studentNotice($studentid)
     {
-		$notice = Notice::whereIn('noticefor', array('student'))->get();
 		$student = Student::where('id',$studentid)->get();
         return view('admin.studentnotice',['students'=>$student,'notices'=>$notice]);
+    }
+	//student Notice
+	public function studentAcademicRecord($studentid)
+    {
+		$student = Student::where('id',$studentid)->get();
+        return view('admin.studentacademicrecord',['students'=>$student]);
     }
 	//student Student Task
 	public function studentDoubtask($studentid)
@@ -963,8 +969,13 @@ class AdminController extends Controller
 	}
 	//manageStudentLeave
 	public function manageStudentLeave(){
+		$applyleave = Applyleave::whereIn('status',array('active','deactive'))->get();
+        return view('admin.managestudentleave',['applyleaves'=>$applyleave]);
+	}
+	//studentPaymentHistory
+	public function studentPaymentHistory(){
 		$student = Student::whereIn('status',array('active','deactive'))->get();
-        return view('admin.managestudentleave',['students'=>$student]);
+        return view('admin.studentpaymenthistory',['students'=>$student]);
 	}
 	//get student form
 	public function addStudent()
@@ -1013,7 +1024,7 @@ class AdminController extends Controller
 			return response()->json([
 				'status' => 'success', 
 				'data' =>[], 
-				'message' => 'User saved successfully!'
+				'message' => 'Student saved successfully!'
 			], 200);	
 		}
     }
@@ -1212,6 +1223,34 @@ class AdminController extends Controller
 					'status' => 'success',  
 					'message' => 'status change successfully!'
 			], 200);
+	}
+	//teacher leave
+	//manageStudentLeave
+	public function manageTeacherLeave(){
+		$teacher = Teacher::whereIn('status',array('active','deactive'))->get();
+        return view('admin.manageteacherleave',['teachers'=>$teacher]);
+	}
+	//doubtsClass
+	public function doubtsClass(){
+		$subject = Subject::whereIn('status',array('active','deactive'))->get();
+        return view('admin.doubtsclass',['subjects'=>$subject]);
+	}
+	//doubtsClass
+	public function Enquiry(){
+        return view('admin.enquiry');
+	}
+	//Practice result
+	public function practiceResult(){
+        return view('admin.practiceresult');
+	}
+	//Mock test result
+	public function mockTestResult(){
+        return view('admin.mocktestresult');
+	}
+	//viewCertificateSample
+	public function viewCertificateSample(){
+		$certificate = Certificate::whereIn('status',array('active','deactive'))->first();
+        return view('admin.viewcertificatesample',['certificate'=>$certificate]);
 	}
 	//teacher manage
 	public function teacherManage()
@@ -2038,6 +2077,9 @@ class AdminController extends Controller
 			$sitesetting->enrollmentword = $request->enrollmentword;
 			$sitesetting->copyrighttext = $request->copyrighttext;
 			$sitesetting->timezone = $request->timezone;
+			$sitesetting->aboutapp = $request->aboutapp;
+			$sitesetting->opensourcelibrary = $request->opensourcelibrary;
+			$sitesetting->privacypolicy = $request->privacypolicy;
 			$sitesetting->createdby = $createdby;
 			$sitesetting->save();
 			return response()->json([

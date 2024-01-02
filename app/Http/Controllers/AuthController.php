@@ -59,7 +59,6 @@ class AuthController extends Controller
 
         $userCredential = $request->only('email','password');
         if(Auth::attempt($userCredential)){
-
             $route = $this->redirectDash();
             return redirect($route);
         }

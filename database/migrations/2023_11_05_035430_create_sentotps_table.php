@@ -13,15 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('applyleaves', function (Blueprint $table) {
+        Schema::create('sentotps', function (Blueprint $table) {
             $table->id();
-            $table->string('from_date');
-            $table->string('to_date');
-            $table->text('subject');
-            $table->text('message');
-			$table->enum('status', ['active', 'deactive'])->default('active');
-            $table->string('createdby');
-            $table->string('applyby')->nullable();
+            $table->integer('mobile');
+            $table->string('otp');
             $table->timestamps();
         });
     }
@@ -33,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('applyleaves');
+        Schema::dropIfExists('sentotps');
     }
 };

@@ -205,6 +205,9 @@ $(function () {
       "buttons": ["csv", "excel", "pdf", "print"]
     }).buttons().container().appendTo('#questionTable_wrapper .col-md-6:eq(0)');
 	
+	$("#doubtClassTable").DataTable();
+	$("#practiceResultTable").DataTable();
+	$("#studentPaymentHistoryTable").DataTable();
 	$("#studentLeaveTable").DataTable();
 	$("#studentDoubtTable").DataTable();
 	$("#studentNoticeTable").DataTable();
@@ -4376,6 +4379,19 @@ $.validator.addMethod("greaterStart", function (value, element, params) {
 				}
             }            
         });
+	})
+	
+	//view student leave applicationmode
+	//Batch delete
+	$(".viewleaveclick").click(function(){
+		let message = $(this).data('message')
+		let subject = $(this).data('subject')
+		let fromdate = $(this).data('fromdate')
+		let todate = $(this).data('todate')
+		$(".message-leave").text(message)
+		$(".subject-leave").text(subject)
+		$(".fromdate-leave").text(fromdate)
+		$(".todate-leave").text(todate)
 	})
 });
 function getpaperid(paperid,status){

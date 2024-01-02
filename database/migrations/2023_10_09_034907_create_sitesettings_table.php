@@ -25,6 +25,9 @@ return new class extends Migration
 			$table->text('sitedescription');
 			$table->text('enrollmentword');
 			$table->text('copyrighttext');
+			$table->text('privacypolicy')->nullable();
+			$table->text('aboutapp')->nullable();
+			$table->longText('opensourcelibrary')->nullable();
 			$table->string('timezone');
 			$table->string('createdby');
 			$table->enum('status', ['active', 'deactive'])->default('active');

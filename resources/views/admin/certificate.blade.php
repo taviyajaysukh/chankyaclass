@@ -94,6 +94,9 @@
 					<div class="col-md-2">
 						<button type="submit" class="btn btn-success btn-block">Save</button>
 					</div>
+					<div class="col-md-2">
+						<a href="{{ url('/admin/viewcertificatesample') }}" class="btn btn-success btn-block">View Certificate</a>
+					</div>
 				</div>
 			</form>
 		  </div>

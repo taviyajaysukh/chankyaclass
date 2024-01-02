@@ -118,6 +118,18 @@
                   <p>{{__('label.studentmanage')}}</p>
                 </a>
               </li>
+			  <li class="nav-item">
+                <a href="{{ url('/admin/managestudentleave') }}" class="nav-link">
+                  <i class="fas fa-angle-right left"></i>
+                  <p>Manage Student Leave</p>
+                </a>
+              </li>
+			  <li class="nav-item">
+                <a href="{{ url('/admin/studentpaymenthistory') }}" class="nav-link">
+                  <i class="fas fa-angle-right left"></i>
+                  <p>Payment History</p>
+                </a>
+              </li>
 			 </ul>
 			</li>
 			<li class="nav-item">
@@ -139,6 +151,12 @@
                 <a href="{{ url('/admin/teachermanage') }}" class="nav-link">
                   <i class="fas fa-angle-right left"></i>
                   <p>Manage Teacher</p>
+                </a>
+              </li>
+			  <li class="nav-item">
+                <a href="{{ url('/admin/manageteacherleave') }}" class="nav-link">
+                  <i class="fas fa-angle-right left"></i>
+                  <p>Manage Teacher Leave</p>
                 </a>
               </li>
 			 </ul>
@@ -182,15 +200,27 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="createpaper" class="nav-link">
+                <a href="{{ url('/admin/createpaper') }}" class="nav-link">
                   <i class="fas fa-angle-right left"></i>
                   <p>Create Paper</p>
                 </a>
               </li>
 			  <li class="nav-item">
-                <a href="exammanage" class="nav-link">
+                <a href="{{ url('/admin/exammanage') }}" class="nav-link">
                   <i class="fas fa-angle-right left"></i>
                   <p>Paper Manage</p>
+                </a>
+              </li>
+			  <li class="nav-item">
+                <a href="{{ url('/admin/practiceresult') }}" class="nav-link">
+                  <i class="fas fa-angle-right left"></i>
+                  <p>Practice Result</p>
+                </a>
+              </li>
+			  <li class="nav-item">
+                <a href="{{ url('/admin/mocktestresult') }}" class="nav-link">
+                  <i class="fas fa-angle-right left"></i>
+                  <p>Mock Test Result</p>
                 </a>
               </li>
 			 </ul>
